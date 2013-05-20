@@ -34,12 +34,17 @@ Bundler.require(:default, PADRINO_ENV)
 # Add your before (RE)load hooks here
 #
 Padrino.before_load do
+  Rabl.configure do |config|
+    config.include_json_root = false
+    config.include_child_root = false
+  end
 end
 
 ##
 # Add your after (RE)load hooks here
 #
 Padrino.after_load do
+  Rabl.register!
 end
 
 Padrino.load!

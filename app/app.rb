@@ -1,16 +1,21 @@
+require 'sinatra/synchrony'
+require 'models_extensions'
+
 module Reactor2
   class App < Padrino::Application
     register Padrino::Rendering
     register Padrino::Mailer
     register Padrino::Helpers
+    register ModelsExtensions
+    register Sinatra::Synchrony
 
     enable :sessions
 
     ##
     # Caching support
     #
-    # register Padrino::Cache
-    # enable :caching
+    register Padrino::Cache
+    enable :caching
     #
     # You can customize caching store engines:
     #

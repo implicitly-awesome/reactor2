@@ -29,8 +29,10 @@ Padrino.configure_apps do
   # enable :sessions
   set :session_secret, '87aec383fef7b4649501ff008c7130f31b05975f3fc260430005c8148305eabd'
   set :protection, true
-  set :protect_from_csrf, true
+  set :protect_from_csrf, false
 end
 
 # Mounts the core application for this project
 Padrino.mount('Reactor2::App', :app_file => Padrino.root('app/app.rb')).to('/')
+
+Padrino.cache = Padrino::Cache::Store::Memcache.new(::Dalli::Client.new('127.0.0.1:11211', :exception_retry_limit => 1))
