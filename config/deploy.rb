@@ -5,7 +5,7 @@ require 'rvm/capistrano'
 server "ec2-54-244-164-253.us-west-2.compute.amazonaws.com", :web, :app, :db, primary: true
 ssh_options[:keys] = [File.join(ENV["HOME"], ".ssh", "improva.pem")]
 
-set :application,   "reactor"
+set :application,   "reactor2"
 set :user,          "ubuntu"
 set :deploy_to,     "/home/#{user}/apps/#{application}"
 set :rails_env,     "production"
@@ -14,7 +14,7 @@ set :keep_releases, 5
 
 set :scm,           :git
 set :branch,        "master"
-set :repository,    "git@github.com:madeinussr/reactor2.git"
+set :repository,    "git@github.com:madeinussr/#{application}"
 set :deploy_via,    :remote_cache
 default_run_options[:pty] = true
 ssh_options[:forward_agent] = true
