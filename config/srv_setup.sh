@@ -7,8 +7,8 @@ USER=$2
 
 sudo apt-get -y update
 sudo apt-get install build-essential zlib1g-dev libssl-dev libreadline-dev libyaml-dev libcurl4-openssl-dev curl git-core python-software-properties libsqlite3-dev sqlite3 libxml2-dev libxslt1-dev autoconf libgdbm-dev libncurses5-dev automake libtool bison libffi-dev
-sudo mkdir -p /home/ubuntu/apps/reactor
-sudo chown -R ubuntu:ubuntu /home/ubuntu/apps/reactor
+sudo mkdir -p /home/ubuntu/apps/reactor2
+sudo chown -R ubuntu:ubuntu /home/ubuntu/apps/reactor2
 echo 'gem: --no-ri --no-rdoc'  >> ~/.gemrc
 
 curl -L https://get.rvm.io | bash -s stable --ruby
@@ -25,10 +25,10 @@ sudo wget -O init-deb.sh http://library.linode.com/assets/660-init-deb.sh
 sudo mv init-deb.sh /etc/init.d/nginx
 sudo chmod +x /etc/init.d/nginx
 sudo /usr/sbin/update-rc.d -f nginx defaults
-#vi /home/ubuntu/apps/reactor/htpasswd
-#printf "reactor:$(openssl passwd -1 BamBIGaY)\n" >> /home/ubuntu/apps/reactor/htpasswd
-#chown root:nobody /home/ubuntu/apps/reactor/htpasswd
-#chmod 640 /home/ubuntu/apps/reactor/htpasswd
+#vi /home/ubuntu/apps/reactor2/htpasswd
+#printf "reactor2:$(openssl passwd -1 BamBIGaY)\n" >> /home/ubuntu/apps/reactor2/htpasswd
+#chown root:nobody /home/ubuntu/apps/reactor2/htpasswd
+#chmod 640 /home/ubuntu/apps/reactor2/htpasswd
 sudo /etc/init.d/nginx stop
 sudo /etc/init.d/nginx start
 

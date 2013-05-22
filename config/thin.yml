@@ -1,4 +1,4 @@
-chdir: /home/ubuntu/apps/reactor/current
+chdir: /home/ubuntu/apps/reactor2/current
 environment: production
 address: 127.0.0.1
 timeout: 30
