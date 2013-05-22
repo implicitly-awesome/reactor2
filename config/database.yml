@@ -1,0 +1,22 @@
+development:
+ sessions:
+   default:
+     database: reactor2_development
+     hosts:
+       - localhost:27017
+
+production:
+ sessions:
+   default:
+     database: improva
+     hosts:
+       - localhost:27017
+     username: improva
+     password: WXJP0q97MWliHn0dhQH9
+
+test:
+ sessions:
+   default:
+     database: reactor2_test
+     hosts:
+       - localhost:27017
