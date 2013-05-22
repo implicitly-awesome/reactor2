@@ -29,7 +29,7 @@ ssh_options[:forward_agent] = true
 
 after "deploy:setup", "deploy:setup_config"
 after "deploy:finalize_update", "deploy:symlink_config"
-after 'deploy', 'deploy:cleanup'#, 'deploy:restart'
+after 'deploy', 'deploy:cleanup', 'deploy:stop', 'deploy:start'
 
 namespace :deploy do
   task :start  do

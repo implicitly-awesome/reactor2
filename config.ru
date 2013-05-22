@@ -6,9 +6,4 @@
 
 require File.expand_path("../config/boot.rb", __FILE__)
 
-Padrino::Application.default_options.merge!(
-    run: false,
-    env: production
-)
-
 run Padrino.application
