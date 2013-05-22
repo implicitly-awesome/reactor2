@@ -2,10 +2,10 @@ require 'rack/auth/digest/md5'
 
 module ModelsExtensions
   class Extensions
-    def self.get_guid(datetime=(Time.now.getutc.to_f * 1000.0).to_i, shard=1, guid=rand(999))
+    def self.get_guid(datetime=(Time.now.getutc.to_f * 1000.0).to_i, shard=1, id=rand(999))
       zero_date = (Time.new(2012,1,1).getutc.to_f * 1000.0).to_i
       delta_time = (datetime - zero_date)
-      guid = (delta_time*(2**23))+((shard%(2**13))*(2**10))+(guid%(2**10))
+      guid = (delta_time*(2**23))+((shard%(2**13))*(2**10))+(id%(2**10))
       guid.to_s
     end
 
@@ -35,7 +35,7 @@ module ModelsExtensions
       if self.is_a? TransactionPack
         Padrino.cache.set("tp_#{self.user_guid}", self.to_json)
       else
-        Padrino.cache.set(self._id, self.to_json)
+        Padrino.cache.set(self.guid, self.to_json)
       end
     end
 
@@ -43,7 +43,7 @@ module ModelsExtensions
       if self.is_a? TransactionPack
         Padrino.cache.delete("tp_#{self.user_guid}")
       else
-        Padrino.cache.delete(self._id)
+        Padrino.cache.delete(self.guid)
       end
     end
 

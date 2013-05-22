@@ -13,7 +13,7 @@ class Transaction < ModelsExtensions::Extensions
   field :attrs, type: Hash                     # fields hash for [c]reate or [u]pdate
   field :handled, type: Boolean, default: false # status of the transaction: was handled by Worker or not
 
-  attr_accessible :guid, :action, :table, :row_id, :attrs, :handled
+  attr_accessible :guid, :action, :table, :row_guid, :attrs, :handled
 
   validates :guid, uniqueness: true
   VALID_ACTION_REGEX = /c|u|d/

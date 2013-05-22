@@ -14,10 +14,11 @@ class User < ModelsExtensions::Extensions
   has_many :transactions, class_name: 'Transaction', dependent: :destroy
   has_one :transaction_pack, class_name: 'TransactionPack', dependent: :destroy
 
-  private
-
-  def set_guid
-    self.guid = ModelsExtensions::Extensions.get_guid
+  def serializable_hash(options={})
+    json = {}
+    self.instance_values['attributes'].each {|k,v| json[k] = v}
+    #json[:transactions] = transactions.inject([]) { |acc, t| acc << t.serializable_hash; acc }
+    json
   end
 
 end

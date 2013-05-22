@@ -1,4 +1,5 @@
-chdir: /home/ubuntu/apps/reactor2/current
+#chdir: /home/ubuntu/apps/reactor2/current
+chdir: /Users/andreichernykh/Documents/Projects/imprapi/reactor2/
 environment: production
 address: 127.0.0.1
 timeout: 30
