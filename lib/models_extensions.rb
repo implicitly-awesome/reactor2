@@ -52,6 +52,5 @@ module ModelsExtensions
     def set_guid
       self.guid = ModelsExtensions::Extensions.get_guid
     end
-
   end
 end

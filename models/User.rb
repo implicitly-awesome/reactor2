@@ -2,14 +2,12 @@ class User < ModelsExtensions::Extensions
   include Mongoid::Document
   include Mongoid::Timestamps
 
-  before_create :set_guid
-
   field :guid, type: String
   field :name, type: String
 
   attr_accessible :guid, :name
 
-  validates :guid, uniqueness: true
+  validates :guid, uniqueness: true, presence: true
 
   has_many :transactions, class_name: 'Transaction', dependent: :destroy
   has_one :transaction_pack, class_name: 'TransactionPack', dependent: :destroy

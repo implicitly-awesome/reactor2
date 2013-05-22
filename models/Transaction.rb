@@ -3,8 +3,6 @@ class Transaction < ModelsExtensions::Extensions
   include Mongoid::Document
   include Mongoid::Timestamps
 
-  before_create :set_guid
-
   field :guid, type: String
   field :local_id, type: Integer
   field :action, type: String                   # [c]reate || [u]pdate || [d]elete
@@ -15,7 +13,7 @@ class Transaction < ModelsExtensions::Extensions
 
   attr_accessible :guid, :action, :table, :row_guid, :attrs, :handled
 
-  validates :guid, uniqueness: true
+  validates :guid, uniqueness: true, presence: true
   VALID_ACTION_REGEX = /c|u|d/
   validates :action, presence: true, format: { with: VALID_ACTION_REGEX }
 

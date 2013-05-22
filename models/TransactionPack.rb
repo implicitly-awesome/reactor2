@@ -3,14 +3,12 @@ class TransactionPack < ModelsExtensions::Extensions
   include Mongoid::Document
   include Mongoid::Timestamps
 
-  before_create :set_guid
-
   field :guid, type: String
   field :sync_pack, type: Array
 
   attr_accessible :guid, :sync_pack
 
-  validates :guid, uniqueness: true
+  validates :guid, uniqueness: true, presence: true
 
   belongs_to :user, foreign_key: :user_guid, class_name: 'User'
   has_many :transactions, class_name: 'Transaction', dependent: :nullify
@@ -21,4 +19,5 @@ class TransactionPack < ModelsExtensions::Extensions
     json[:transactions] = transactions.inject([]) { |acc, t| acc << t.serializable_hash; acc }
     json
   end
+
 end
