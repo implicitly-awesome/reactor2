@@ -9,7 +9,7 @@ class Transaction < ModelsExtensions::Extensions
   field :local_id, type: Integer
   field :action, type: String                   # [c]reate || [u]pdate || [d]elete
   field :table, type: String                    # table that transaction for
-  field :row_id, type: Integer                  # row ID in the table that transaction for
+  field :row_guid, type: Integer                  # row ID in the table that transaction for
   field :attrs, type: Hash                     # fields hash for [c]reate or [u]pdate
   field :handled, type: Boolean, default: false # status of the transaction: was handled by Worker or not
 
