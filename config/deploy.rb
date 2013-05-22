@@ -33,21 +33,21 @@ after 'deploy', 'deploy:cleanup'#, 'deploy:restart'
 
 namespace :deploy do
   task :start  do
-    run "cd #{current_path} && bundle exec thin start -C config/thin.yml config.ru start"
+    run "cd #{current_path} && nohup bundle exec thin start -C config/thin.yml -R config.ru start"
     sudo "/etc/init.d/nginx start"
   end
 
   task :stop do
-    run "cd #{current_path} && bundle exec thin stop -C config/thin.yml config.ru stop"
+    run "cd #{current_path} && nohup bundle exec thin stop -C config/thin.yml -R config.ru stop"
     sudo "/etc/init.d/nginx stop"
   end
 
-  task :restart do
-    run "cd #{current_path} && bundle exec thin stop -C config/thin.yml config.ru stop"
-    run "cd #{current_path} && bundle exec thin start -C config/thin.yml config.ru start"
-    sudo "/etc/init.d/nginx stop"
-    sudo "/etc/init.d/nginx start"
-  end
+  #task :restart do
+  #  run "cd #{current_path} && bundle exec thin stop -C config/thin.yml config.ru stop"
+  #  run "cd #{current_path} && bundle exec thin start -C config/thin.yml config.ru start"
+  #  sudo "/etc/init.d/nginx stop"
+  #  sudo "/etc/init.d/nginx start"
+  #end
 
   task :setup_config, roles: :app do
     sudo "chmod ugo+rwx /opt/nginx/conf/nginx.conf"
