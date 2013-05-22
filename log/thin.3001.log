@@ -1,0 +1,4 @@
+>> Writing PID to tmp/pids/thin.3001.pid
+>> Thin web server (v1.5.1 codename Straight Razor)
+>> Maximum connections set to 1024
+>> Listening on 127.0.0.1:3001, CTRL+C to stop

@@ -1,12 +1,4 @@
-/Users/andreichernykh/.rbenv/versions/1.9.3-p392/lib/ruby/gems/1.9.1/gems/thin-1.5.1/lib/thin/runner.rb:172:in `chdir': No such file or directory - /home/ubuntu/apps/reactor2/current (Errno::ENOENT)
-	from /Users/andreichernykh/.rbenv/versions/1.9.3-p392/lib/ruby/gems/1.9.1/gems/thin-1.5.1/lib/thin/runner.rb:172:in `run_command'
-	from /Users/andreichernykh/.rbenv/versions/1.9.3-p392/lib/ruby/gems/1.9.1/gems/thin-1.5.1/lib/thin/runner.rb:152:in `run!'
-	from /Users/andreichernykh/.rbenv/versions/1.9.3-p392/lib/ruby/gems/1.9.1/gems/thin-1.5.1/bin/thin:6:in `<top (required)>'
-	from /Users/andreichernykh/.rbenv/versions/1.9.3-p392/bin/thin:23:in `load'
-	from /Users/andreichernykh/.rbenv/versions/1.9.3-p392/bin/thin:23:in `<main>'
-/Users/andreichernykh/.rbenv/versions/1.9.3-p392/lib/ruby/gems/1.9.1/gems/thin-1.5.1/lib/thin/runner.rb:172:in `chdir': No such file or directory - /home/ubuntu/apps/reactor2/current (Errno::ENOENT)
-	from /Users/andreichernykh/.rbenv/versions/1.9.3-p392/lib/ruby/gems/1.9.1/gems/thin-1.5.1/lib/thin/runner.rb:172:in `run_command'
-	from /Users/andreichernykh/.rbenv/versions/1.9.3-p392/lib/ruby/gems/1.9.1/gems/thin-1.5.1/lib/thin/runner.rb:152:in `run!'
-	from /Users/andreichernykh/.rbenv/versions/1.9.3-p392/lib/ruby/gems/1.9.1/gems/thin-1.5.1/bin/thin:6:in `<top (required)>'
-	from /Users/andreichernykh/.rbenv/versions/1.9.3-p392/bin/thin:23:in `load'
-	from /Users/andreichernykh/.rbenv/versions/1.9.3-p392/bin/thin:23:in `<main>'
+Starting server on 127.0.0.1:3000 ... 
+Starting server on 127.0.0.1:3001 ... 
+Starting server on 127.0.0.1:3002 ... 
+Starting server on 127.0.0.1:3003 ... 

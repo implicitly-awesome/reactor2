@@ -4,3 +4,12 @@
 >> Maximum connections set to 1024
 >> Listening on /tmp/thin.1.sock, CTRL+C to stop
 >> Exiting!
+>> Writing PID to tmp/pids/thin.1.pid
+>> Thin web server (v1.5.1 codename Straight Razor)
+>> Maximum connections set to 1024
+>> Listening on /tmp/thin.1.sock, CTRL+C to stop
+>> Exiting!
+>> Writing PID to tmp/pids/thin.1.pid
+>> Thin web server (v1.5.1 codename Straight Razor)
+>> Maximum connections set to 1024
+>> Listening on /tmp/thin.1.sock, CTRL+C to stop
