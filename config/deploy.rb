@@ -33,12 +33,12 @@ after 'deploy', 'deploy:cleanup'#, 'deploy:restart'
 
 namespace :deploy do
   task :start  do
-    run "cd #{current_path} && nohup bundle exec thin start -C config/thin.yml -R config.ru start"
+    run "cd #{current_path} && nohup bundle exec thin -C config/thin.yml -R config.ru start"
     sudo "/etc/init.d/nginx start"
   end
 
   task :stop do
-    run "cd #{current_path} && nohup bundle exec thin stop -C config/thin.yml -R config.ru stop"
+    run "cd #{current_path} && nohup bundle exec thin -C config/thin.yml -R config.ru stop"
     sudo "/etc/init.d/nginx stop"
   end
 
