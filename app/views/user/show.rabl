@@ -1,3 +1,3 @@
 object @user
 
-attributes :_id, :name
+attributes :guid, :name

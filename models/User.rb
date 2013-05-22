@@ -4,12 +4,12 @@ class User < ModelsExtensions::Extensions
 
   before_create :set_guid
 
-  field :_id, type: String
+  field :guid, type: String
   field :name, type: String
 
-  attr_accessible :_id, :name
+  attr_accessible :guid, :name
 
-  validates :_id, uniqueness: true
+  validates :guid, uniqueness: true
 
   has_many :transactions, class_name: 'Transaction', dependent: :destroy
   has_one :transaction_pack, class_name: 'TransactionPack', dependent: :destroy
@@ -17,7 +17,7 @@ class User < ModelsExtensions::Extensions
   private
 
   def set_guid
-    self._id = ModelsExtensions::Extensions.get_guid
+    self.guid = ModelsExtensions::Extensions.get_guid
   end
 
 end

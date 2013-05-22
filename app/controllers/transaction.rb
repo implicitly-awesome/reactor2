@@ -1,7 +1,7 @@
 Reactor2::App.controllers :transaction do
   before {content_type :json}
   before :show do
-    @transaction = get_transaction(params[:id])
+    @transaction = get_transaction(params[:guid])
   end
 
   get :index, map: '/api/v1/transactions' do
@@ -9,7 +9,7 @@ Reactor2::App.controllers :transaction do
     render 'transaction/index'
   end
 
-  get :show, map: '/api/v1/transactions/:id' do
+  get :show, map: '/api/v1/transactions/:guid' do
     render 'transaction/show'
   end
 
@@ -19,8 +19,8 @@ Reactor2::App.controllers :transaction do
     response_with transaction
   end
 
-  put :update, map: '/api/v1/transactions/:id' do
-    transaction = get_transaction(params[:id])
+  put :update, map: '/api/v1/transactions/:guid' do
+    transaction = get_transaction(params[:guid])
     if transaction && transaction.update_attributes(JSON.parse(params[:transaction].to_s))
       transaction.delete_from_cache
       transaction.put_in_cache
@@ -28,8 +28,8 @@ Reactor2::App.controllers :transaction do
     response_with transaction
   end
 
-  delete :destroy, map: '/api/v1/transactions/:id' do
-    transaction = Transaction.find_in_db(params[:id])
+  delete :destroy, map: '/api/v1/transactions/:guid' do
+    transaction = Transaction.find_in_db(params[:guid])
 
     if transaction
       transaction.delete_from_cache

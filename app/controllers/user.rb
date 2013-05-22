@@ -1,7 +1,7 @@
 Reactor2::App.controllers :user do
   before {content_type :json}
   before :show do
-    @user = get_user(params[:id])
+    @user = get_user(params[:guid])
   end
 
   get :index, map: '/api/v1/users' do
@@ -9,7 +9,7 @@ Reactor2::App.controllers :user do
     render 'user/index'
   end
 
-  get :show, map: '/api/v1/users/:id' do
+  get :show, map: '/api/v1/users/:guid' do
     render 'user/show'
   end
 
@@ -19,8 +19,8 @@ Reactor2::App.controllers :user do
     response_with user
   end
 
-  put :update, map: '/api/v1/users/:id' do
-    user = get_user(params[:id])
+  put :update, map: '/api/v1/users/:guid' do
+    user = get_user(params[:guid])
     if user && user.update_attributes(JSON.parse(params[:user].to_s))
       user.delete_from_cache
       user.put_in_cache
@@ -28,8 +28,8 @@ Reactor2::App.controllers :user do
     response_with user
   end
 
-  delete :destroy, map: '/api/v1/users/:id' do
-    user = User.find_in_db(params[:id])
+  delete :destroy, map: '/api/v1/users/:guid' do
+    user = User.find_in_db(params[:guid])
 
     if user
       user.delete_from_cache

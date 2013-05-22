@@ -1,3 +1,3 @@
 collection @users
 
-attributes :_id, :name
+attributes :guid, :name

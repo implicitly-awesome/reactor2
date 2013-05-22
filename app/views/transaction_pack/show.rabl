@@ -1,4 +1,4 @@
 object @transaction_pack
 
-attributes :_id
-child(:transactions) {attributes :_id, :action, :table, :row_id, :attrs, :handled}
+attributes :guid
+child(:transactions) {attributes :guid, :action, :table, :row_id, :attrs, :handled}

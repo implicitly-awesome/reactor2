@@ -5,14 +5,14 @@ class TransactionPack < ModelsExtensions::Extensions
 
   before_create :set_guid
 
-  field :_id, type: String
+  field :guid, type: String
   field :sync_pack, type: Array
 
-  attr_accessible :_id, :sync_pack
+  attr_accessible :guid, :sync_pack
 
-  validates :_id, uniqueness: true
+  validates :guid, uniqueness: true
 
-  belongs_to :user, foreign_key: :user_id, class_name: 'User'
+  belongs_to :user, foreign_key: :user_guid, class_name: 'User'
   has_many :transactions, class_name: 'Transaction', dependent: :nullify
 
   def serializable_hash(options={})

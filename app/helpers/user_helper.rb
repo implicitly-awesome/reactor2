@@ -1,10 +1,10 @@
 Reactor2::App.helpers do
 
-  def get_user(id)
+  def get_user(guid)
     begin
-      User.new(JSON.parse(User.find_in_cache(id)))
+      User.new(JSON.parse(User.find_in_cache(guid)))
     rescue
-      User.find_in_db(id)
+      User.find_in_db(guid)
     end
   end
 
