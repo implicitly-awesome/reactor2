@@ -50,7 +50,7 @@ module ModelsExtensions
     private
 
     def set_guid
-      self._id = ModelsExtensions::Extensions.get_guid
+      self.guid = ModelsExtensions::Extensions.get_guid
     end
 
   end
