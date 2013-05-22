@@ -1,0 +1,13 @@
+chdir: /home/ubuntu/apps/reactor/current
+environment: production
+address: 127.0.0.1
+timeout: 30
+log: log/thin.log
+pid: tmp/pids/thin.pid
+socket: /tmp/thin.sock
+max_conns: 1024
+max_persistent_conns: 512
+require: []
+wait: 30
+servers: 4
+daemonize: true

@@ -16,6 +16,8 @@ gem 'dalli', '~> 2.6.3'
 gem 'padrino', '0.11.1'
 gem 'sinatra-synchrony', '~> 0.4.1'
 gem 'thin', '~> 1.5.1'
+gem 'capistrano'
+gem 'rvm-capistrano'
 
 gem 'rspec', group: 'test'
 gem 'capybara', group: 'test'
