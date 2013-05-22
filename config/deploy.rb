@@ -1,3 +1,5 @@
+load 'deploy' if respond_to?(:namespace)
+
 require 'bundler/capistrano'
 require 'rvm/capistrano'
 
@@ -31,17 +33,18 @@ after 'deploy', 'deploy:cleanup'#, 'deploy:restart'
 
 namespace :deploy do
   task :start  do
-    run "cd #{current_path} && bundle exec thin start -C config/thin.yml"
+    run "cd #{current_path} && bundle exec thin start -C config/thin.yml config.ru start"
     sudo "/etc/init.d/nginx start"
   end
 
   task :stop do
-    run "cd #{current_path} && bundle exec thin stop -C config/thin.yml"
+    run "cd #{current_path} && bundle exec thin stop -C config/thin.yml config.ru stop"
     sudo "/etc/init.d/nginx stop"
   end
 
   task :restart do
-    run "cd #{current_path} && bundle exec thin restart -C config/thin.yml"
+    run "cd #{current_path} && bundle exec thin stop -C config/thin.yml config.ru stop"
+    run "cd #{current_path} && bundle exec thin start -C config/thin.yml config.ru start"
     sudo "/etc/init.d/nginx stop"
     sudo "/etc/init.d/nginx start"
   end
@@ -55,6 +58,11 @@ namespace :deploy do
 
   task :symlink_config, roles: :app do
     run "ln -nfs #{shared_path}/config/database.rb #{release_path}/config/database.rb"
+  end
+
+  task :cold do
+    deploy.update
+    deploy.start
   end
 
   #task :set_gems do
