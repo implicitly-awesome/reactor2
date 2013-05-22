@@ -21,8 +21,7 @@ Reactor2::App.helpers do
     transaction_pack = TransactionPack.new
     transaction_pack.guid = ModelsExtensions::Extensions.get_guid
     transaction_pack.user = User.find_in_db(user_guid)
-    transaction_pack.put_in_cache
-    transaction_pack.save
+    transaction_pack.put_in_cache if transaction_pack.save
     transaction_pack
   end
 end
