@@ -1,4 +1,8 @@
 Reactor2::App.controllers :transaction do
+  before {content_type :json}
+  before :show do
+    @transaction = get_transaction(params[:id])
+  end
 
   get :index, map: '/api/v1/transactions' do
     @transactions = Transaction.all
@@ -6,43 +10,30 @@ Reactor2::App.controllers :transaction do
   end
 
   get :show, map: '/api/v1/transactions/:id' do
-    begin
-      @transaction = Transaction.find(params[:id])
-    rescue Mongoid::Errors::DocumentNotFound
-      @transaction = {}
-    end
     render 'transaction/show'
   end
 
   post :create, map: '/api/v1/transactions' do
-    content_type :json
-
     transaction = Transaction.new(JSON.parse(params[:transaction].to_s))
     transaction.save
     response_with transaction
   end
 
   put :update, map: '/api/v1/transactions/:id' do
-    content_type :json
-
-    begin
-      transaction = Transaction.find(params[:id])
-    rescue Mongoid::Errors::DocumentNotFound
-      transaction = nil
+    transaction = get_transaction(params[:id])
+    if transaction && transaction.update_attributes(JSON.parse(params[:transaction].to_s))
+      transaction.delete_from_cache
+      transaction.put_in_cache
     end
-
-    transaction.update_attributes(JSON.parse(params[:transaction].to_s)) if transaction && transaction.valid?
+    response_with transaction
   end
 
   delete :destroy, map: '/api/v1/transactions/:id' do
-    content_type :json
+    transaction = Transaction.find_in_db(params[:id])
 
-    begin
-      transaction = Transaction.find(params[:id])
-    rescue Mongoid::Errors::DocumentNotFound
-      transaction = nil
+    if transaction
+      transaction.delete_from_cache
+      transaction.destroy
     end
-
-    transaction.destroy if transaction
   end
 end

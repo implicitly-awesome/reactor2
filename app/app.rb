@@ -1,5 +1,7 @@
 require 'sinatra/synchrony'
 require 'models_extensions'
+require 'extensions'
+require 'active_support/inflector'
 
 module Reactor2
   class App < Padrino::Application

@@ -1,7 +1,11 @@
-# Helper methods defined here can be accessed in any controller or view in the application
-
 Reactor2::App.helpers do
-  # def simple_helper_method
-  #  ...
-  # end
+
+  def get_transaction(id)
+    begin
+      User.new(JSON.parse(User.find_in_cache(id)))
+    rescue
+      User.find_in_db(id)
+    end
+  end
+
 end

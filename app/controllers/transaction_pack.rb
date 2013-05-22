@@ -4,6 +4,10 @@ Reactor2::App.controllers :transaction_pack do
     @transaction_pack = get_transaction_pack(params[:user_id])
   end
 
+  get :test, map: '/api/v1/test' do
+   response = [{tweet:"Hella World!"},{tweet:"New Rails has been released"}].to_json
+  end
+
   get :index, map: '/api/v1/transaction_packs' do
     @transaction_packs = TransactionPack.all
     render 'transaction_pack/index'
