@@ -33,6 +33,14 @@ Bundler.require(:default, PADRINO_ENV)
 ##
 # Add your before (RE)load hooks here
 #
+begin
+  require 'pry'
+  $VERBOSE = nil
+  IRB = Pry
+  $VERBOSE = false
+rescue LoadError
+end
+
 Padrino.before_load do
   Rabl.configure do |config|
     config.include_json_root = false

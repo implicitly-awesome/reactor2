@@ -1,5 +1,6 @@
 require 'sinatra/synchrony'
 require 'models_extensions'
+require 'test'
 require 'extensions'
 require 'active_support/inflector'
 

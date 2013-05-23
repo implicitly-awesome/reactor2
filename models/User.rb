@@ -2,21 +2,49 @@ class User < ModelsExtensions::Extensions
   include Mongoid::Document
   include Mongoid::Timestamps
 
+
   field :guid, type: String
   field :name, type: String
 
+
   attr_accessible :guid, :name
+
 
   validates :guid, uniqueness: true, presence: true
 
-  has_many :transactions, class_name: 'Transaction', dependent: :destroy
-  has_one :transaction_pack, class_name: 'TransactionPack', dependent: :destroy
 
-  def serializable_hash(options={})
-    json = {}
-    self.instance_values['attributes'].each {|k,v| json[k] = v}
-    #json[:transactions] = transactions.inject([]) { |acc, t| acc << t.serializable_hash; acc }
-    json
+  # get transaction_pack
+  def transaction_pack
+    TransactionPack.where(user_guid: self.guid).first
   end
+
+  # set transaction_pack
+  def transaction_pack=(transaction_pack)
+    transaction_pack.user = self
+    if transaction_pack.save
+      transaction_pack.delete_from_cache
+      transaction_pack.put_in_cache
+    end
+  end
+
+  # get the list of transactions
+  def transactions
+    Transaction.where(transaction_pack_guid: self.guid).first || []
+  end
+
+  # add a transaction to the list
+  def add_transaction(transaction)
+    transaction.user = self
+    if transaction.save
+      transaction.delete_from_cache
+      transaction.put_in_cache
+    end
+  end
+
+  # delete a transaction from the list
+  def delete_transaction(transaction)
+    transaction.delete_from_cache if transaction.destroy
+  end
+
 
 end

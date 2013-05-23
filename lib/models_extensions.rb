@@ -9,8 +9,12 @@ module ModelsExtensions
       guid.to_s
     end
 
-    def self.find_by_user(user_guid)
-      self.where("user_guid = '#{user_guid}'").first
+    def self.get(guid)
+      begin
+        self.new(JSON.parse(self.find_in_cache(guid)))
+      rescue
+        self.find_in_db(guid)
+      end
     end
 
     def self.find_in_cache(guid)
@@ -21,11 +25,15 @@ module ModelsExtensions
       end
     end
 
+    def self.find_by_user(user_guid)
+      self.where(user_guid: user_guid).first
+    end
+
     def self.find_in_db(guid)
       if self.to_s == 'TransactionPack'
         result = self.find_by_user(guid)
       else
-        result = self.find(guid)
+        result = self.where(guid: guid).first
       end
       result.put_in_cache if result
       result
@@ -46,6 +54,7 @@ module ModelsExtensions
         Padrino.cache.delete(self.guid)
       end
     end
+
 
     private
 

@@ -3,26 +3,52 @@ class Transaction < ModelsExtensions::Extensions
   include Mongoid::Document
   include Mongoid::Timestamps
 
+
   field :guid, type: String
-  field :local_id, type: Integer
+  field :user_guid, type: String
+  field :transaction_pack_guid, type: String
   field :action, type: String                   # [c]reate || [u]pdate || [d]elete
   field :table, type: String                    # table that transaction for
-  field :row_guid, type: Integer                  # row ID in the table that transaction for
+  field :row_guid, type: String                  # row ID in the table that transaction for
   field :attrs, type: Hash                     # fields hash for [c]reate or [u]pdate
   field :handled, type: Boolean, default: false # status of the transaction: was handled by Worker or not
 
+
   attr_accessible :guid, :action, :table, :row_guid, :attrs, :handled
 
+
   validates :guid, uniqueness: true, presence: true
+  validates :user_guid, presence: true
   VALID_ACTION_REGEX = /c|u|d/
   validates :action, presence: true, format: { with: VALID_ACTION_REGEX }
 
-  belongs_to :user, foreign_key: :user_guid, class_name: 'User'
-  belongs_to :transaction_pack, foreign_key: :transaction_pack_guid, class_name: 'TransactionPack'
 
-  def serializable_hash(options={})
-    json = {}
-    self.instance_values['attributes'].each {|k,v| json[k] = v}
-    json
+  # get user
+  def user
+    User.get(self.user_guid)
   end
+
+  # set user
+  def user=(user)
+    if user
+      self.user_guid = user.guid
+    else
+      self.user_guid = nil
+    end
+  end
+
+  # get transaction_pack
+  def transaction_pack
+    TransactionPack.get(self.transaction_pack_guid)
+  end
+
+  # set transaction_pack
+  def transaction_pack=(transaction_pack)
+    if transaction_pack
+      self.transaction_pack_guid = transaction_pack.guid
+    else
+      self.transaction_pack_guid = nil
+    end
+  end
+
 end

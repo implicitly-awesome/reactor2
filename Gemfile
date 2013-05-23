@@ -19,6 +19,7 @@ gem 'thin', '~> 1.5.1'
 gem 'capistrano'
 gem 'rvm-capistrano'
 
+gem 'pry'
 gem 'rspec', group: 'test'
 gem 'capybara', group: 'test'
 gem 'cucumber', group: 'test'
