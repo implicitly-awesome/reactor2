@@ -2,6 +2,9 @@ class User < ModelsExtensions::Extensions
   include Mongoid::Document
   include Mongoid::Timestamps
 
+  # User destroying is canceled
+  before_destroy {false}
+
 
   field :guid, type: String
   field :name, type: String
@@ -11,6 +14,7 @@ class User < ModelsExtensions::Extensions
 
 
   validates :guid, uniqueness: true, presence: true
+  validates :name, presence: true
 
 
   # get transaction_pack

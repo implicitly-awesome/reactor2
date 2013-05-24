@@ -36,11 +36,7 @@ When /^I digest\-authenticate as the user "(.*?)" with the password "(.*?)"$/ do
   digest_authorize user, pass
 end
 
-When /^I send a (GET|POST|PUT|DELETE) request (?:for|to) "([^"]*)"(?: with the following:)?$/ do |*args|
-  request_type = args.shift
-  path = args.shift
-  input = args.shift
-
+When /^I send a ([^"]*) request (?:for|to) "([^"]*)"(?: with the following:)?$/ do |request_type, path, input|
   request_opts = {method: request_type.downcase.to_sym}
 
   unless input.nil?
@@ -71,6 +67,16 @@ Then /^the response status should be "([^"]*)"$/ do |status|
     last_response.status.should == status.to_i
   else
     assert_equal status.to_i, last_response.status
+  end
+end
+
+Then(/^the JSON response should (not)?\s?have "([^"]*)" field$/) do |negative, json_path|
+  json    = JSON.parse(last_response.body)
+  results = JsonPath.new(json_path).on(json).to_a.map(&:to_s).join(' ')
+  if negative.present?
+    results.length.should_not > 0
+  else
+    results.length.should > 0
   end
 end
 
@@ -116,12 +122,91 @@ Then 'the JSON response should be:' do |json|
   end
 end
 
-Then /^the JSON response should have "([^"]*)" with a length of (\d+)$/ do |json_path, length|
+Then /^the JSON response should (not)?\s?be: "([^"]*)"$/ do |negative, json|
+  expected = JSON.parse(json)
+  actual = JSON.parse(last_response.body)
+
+  if negative.present?
+    actual.should_not == expected
+  else
+    actual.should == expected
+  end
+end
+
+Then /^the JSON response should (not)?\s?have text: "([^"]*)"$/ do |negative, text|
+  actual = JSON.parse(last_response.body).to_s
+
+  if negative.present?
+    actual.should_not include(text)
+  else
+    actual.should include(text)
+  end
+end
+
+Then /^the JSON response should have "([^"]*)" with a length: "([^"]*)"$/ do |json_path, length|
   json = JSON.parse(last_response.body)
   results = JsonPath.new(json_path).on(json)
-  if self.respond_to?(:should)
-    results.length.should == length.to_i
+
+  if length == '>0'
+    results.length.should > 0
   else
-    assert_equal length.to_i, results.length
+    results.length.should == length.to_i
+  end
+end
+
+Given(/^the User with the following:$/) do |table|
+  table.map_headers!('Guid' => :guid, 'Name' => :name)
+  table.hashes.each do |h|
+    @user = User.create(h)
+  end
+end
+
+Then(/^the ([^"]*) should have "([^"]*)" field with value "([^"]*)"$/) do |model_name, field, value|
+  cls = Object.const_get(model_name)
+  obj = nil
+  inst = self.instance_variable_get("@#{model_name.downcase}")
+
+  if model_name == 'TransactionPack'
+    obj = cls.send(:get, inst.send(:user_guid))
+  else
+    obj = cls.send(:get, inst.send(:guid))
+  end
+
+  obj.send(field.to_sym).should == value
+end
+
+Then(/^the ([^"]*) should (not)?\s?exists in ([^"]*)$/) do |model_name, negative, store|
+  cls = Object.const_get(model_name)
+  obj = nil
+  inst = self.instance_variable_get("@#{model_name.downcase}")
+
+  if store == 'CACHE'
+    if model_name == 'TransactionPack'
+      obj = cls.send(:find_in_cache, inst.send(:user_guid))
+    else
+      obj = cls.send(:find_in_cache, inst.send(:guid))
+    end
+  elsif store == 'DB'
+    if model_name == 'TransactionPack'
+      obj = cls.send(:find_in_db, inst.send(:user_guid))
+    else
+      obj = cls.send(:find_in_db, inst.send(:guid))
+    end
+  else
+    obj = nil
+  end
+
+  if negative.present?
+    obj.should == nil
+  else
+    obj.should_not == nil
+  end
+end
+
+Given(/^I have the list of entities:$/) do |table|
+  table.map_headers!('Model' => :model, 'Attrs' => :attrs)
+  table.hashes.each do |h|
+    cls = Object.const_get(h[:model])
+    cls.send(:create,JSON.parse(h[:attrs]))
   end
 end

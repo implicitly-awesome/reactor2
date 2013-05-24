@@ -20,6 +20,9 @@ gem 'capistrano'
 gem 'rvm-capistrano'
 
 gem 'pry'
+gem 'pry-remote'
+gem 'pry-nav'
+
 gem 'rspec', group: 'test'
 gem 'capybara', group: 'test'
 gem 'cucumber', group: 'test'

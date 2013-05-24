@@ -21,7 +21,7 @@ Reactor2::App.controllers :user do
   end
 
   put :update, map: '/api/v1/users/:guid' do
-    user = get_user(params[:guid])
+    user = User.find_in_db(params[:guid])
     if user && user.update_attributes(JSON.parse(params[:user]))
       user.delete_from_cache
       user.put_in_cache
@@ -35,6 +35,7 @@ Reactor2::App.controllers :user do
     if user
       user.delete_from_cache
       user.destroy
+      response_with user, 'The User can not be deleted!'
     end
   end
 end

@@ -115,6 +115,11 @@ GEM
       coderay (~> 1.0.5)
       method_source (~> 0.8)
       slop (~> 3.4)
+    pry-nav (0.2.3)
+      pry (~> 0.9.10)
+    pry-remote (0.1.7)
+      pry (~> 0.9)
+      slop (~> 3.0)
     rabl (0.8.4)
       activesupport (>= 2.3.14)
     rack (1.5.2)
@@ -183,6 +188,8 @@ DEPENDENCIES
   oj (~> 2.0.12)
   padrino (= 0.11.1)
   pry
+  pry-nav
+  pry-remote
   rabl (~> 0.8.4)
   rack (= 1.5.2)
   rack-test
