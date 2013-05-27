@@ -22,7 +22,7 @@ Reactor2::App.controllers :transaction do
   end
 
   put :update, map: '/api/v1/transactions/:guid' do
-    transaction = get_transaction(params[:guid])
+    transaction = Transaction.find_in_db(params[:guid])
     if transaction && transaction.update_attributes(JSON.parse(params[:transaction]))
       transaction.delete_from_cache
       transaction.put_in_cache

@@ -9,7 +9,7 @@ class TransactionPack < ModelsExtensions::Extensions
   field :sync_pack, type: Array
 
 
-  attr_accessible :guid, :sync_pack
+  attr_accessible :guid, :user_guid, :sync_pack
 
 
   validates :guid, uniqueness: true, presence: true

@@ -134,7 +134,8 @@ Then /^the JSON response should (not)?\s?be: "([^"]*)"$/ do |negative, json|
 end
 
 Then /^the JSON response should (not)?\s?have text: "([^"]*)"$/ do |negative, text|
-  actual = JSON.parse(last_response.body).to_s
+  #actual = JSON.parse(last_response.body).to_s
+  actual = last_response.body.to_s
 
   if negative.present?
     actual.should_not include(text)
@@ -146,7 +147,6 @@ end
 Then /^the JSON response should have "([^"]*)" with a length: "([^"]*)"$/ do |json_path, length|
   json = JSON.parse(last_response.body)
   results = JsonPath.new(json_path).on(json)
-
   if length == '>0'
     results.length.should > 0
   else
@@ -158,13 +158,14 @@ Given(/^the User with the following:$/) do |table|
   table.map_headers!('Guid' => :guid, 'Name' => :name)
   table.hashes.each do |h|
     @user = User.create(h)
+    @user.put_in_cache
   end
 end
 
 Then(/^the ([^"]*) should have "([^"]*)" field with value "([^"]*)"$/) do |model_name, field, value|
   cls = Object.const_get(model_name)
   obj = nil
-  inst = self.instance_variable_get("@#{model_name.downcase}")
+  inst = self.instance_variable_get("@#{model_name.underscore}")
 
   if model_name == 'TransactionPack'
     obj = cls.send(:get, inst.send(:user_guid))
@@ -208,5 +209,39 @@ Given(/^I have the list of entities:$/) do |table|
   table.hashes.each do |h|
     cls = Object.const_get(h[:model])
     cls.send(:create,JSON.parse(h[:attrs]))
+  end
+end
+
+When(/^the quantity of ([^"]*) is "(\d+)"$/) do |model, count|
+  cls = Object.const_get(model)
+  objs = cls.send(:all)
+  objs.send(:count).should == count.to_i
+end
+
+Given(/^the TransactionPack with the following:$/) do |table|
+  table.map_headers!('Guid' => :guid, 'User_guid' => :user_guid)
+  table.hashes.each do |h|
+    @transaction_pack = TransactionPack.create(h)
+    @transaction_pack.put_in_cache
+  end
+end
+
+When(/^the ([^"]*) should (not)?\s?have "(\d+)" records in DB with field "([^"]*)" and value "([^"]*)"$/) do |model_name, negative, count, field, value|
+  cls = Object.const_get(model_name)
+  objs = []
+  objs << cls.send(:where, {field.to_sym => value})
+
+  if negative.present?
+    objs.count.should_not == count.to_i
+  else
+    objs.count.should == count.to_i
+  end
+end
+
+Given(/^the Transaction with the following:$/) do |table|
+  table.map_headers!('Guid' => :guid, 'User_guid' => :user_guid, 'Action' => :action)
+  table.hashes.each do |h|
+    @transaction = Transaction.create(h)
+    @transaction.put_in_cache
   end
 end

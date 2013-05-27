@@ -14,7 +14,7 @@ class Transaction < ModelsExtensions::Extensions
   field :handled, type: Boolean, default: false # status of the transaction: was handled by Worker or not
 
 
-  attr_accessible :guid, :action, :table, :row_guid, :attrs, :handled
+  attr_accessible :guid, :user_guid, :transaction_pack_guid, :action, :table, :row_guid, :attrs, :handled
 
 
   validates :guid, uniqueness: true, presence: true

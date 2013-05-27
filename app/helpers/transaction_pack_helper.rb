@@ -9,14 +9,6 @@ Reactor2::App.helpers do
     end
   end
 
-  def get_transaction_pack(user_guid)
-    begin
-      TransactionPack.new(JSON.parse(TransactionPack.find_in_cache(user_guid)))
-    rescue
-      TransactionPack.find_in_db(user_guid)
-    end
-  end
-
   def create_transaction_pack(user_guid)
     transaction_pack = TransactionPack.new
     transaction_pack.guid = ModelsExtensions::Extensions.get_guid

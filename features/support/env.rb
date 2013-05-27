@@ -15,3 +15,8 @@ Capybara.app = Reactor2::App.tap { |app|  }
 def app
   Rack::Lint.new(Capybara.app)
 end
+
+# Database cleaner
+require 'database_cleaner'
+require 'database_cleaner/cucumber'
+DatabaseCleaner.strategy = :truncation

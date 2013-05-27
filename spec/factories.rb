@@ -3,12 +3,8 @@ require 'factory_girl'
 FactoryGirl.define do
 
   factory :user do
-    after :create do |u|
-      u._id = '007'
-    end
-
-    _id '007'
-    name 'test_user'
+    sequence(:guid){|n| "#{n}" }
+    sequence(:name){|n| "user_#{n}" }
   end
 
   factory :transaction_pack do
