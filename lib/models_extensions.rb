@@ -9,6 +9,11 @@ module ModelsExtensions
       guid.to_s
     end
 
+    def self.get_all_models
+      Object.constants.collect { |sym| Object.const_get(sym) }.
+          select { |constant| constant.class == Class && constant.include?(Mongoid::Document) }
+    end
+
     def self.get(guid)
       begin
         self.new(JSON.parse(self.find_in_cache(guid)))

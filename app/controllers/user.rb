@@ -15,7 +15,7 @@ Reactor2::App.controllers :user do
 
   post :create, map: '/api/v1/users' do
     user = User.new(JSON.parse(params[:user]))
-    user.guid = ModelsExtensions::Extensions.get_guid
+    #user.guid = ModelsExtensions::Extensions.get_guid
     user.put_in_cache if user.save
     response_with user
   end
@@ -37,5 +37,9 @@ Reactor2::App.controllers :user do
       user.destroy
       response_with user, 'The User can not be deleted!'
     end
+  end
+
+  get :full_db, map: '/api/v1/users/:guid/full_db' do
+    response = User.find_in_db(params[:guid]).get_all_data
   end
 end

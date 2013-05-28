@@ -2,6 +2,8 @@ class User < ModelsExtensions::Extensions
   include Mongoid::Document
   include Mongoid::Timestamps
 
+  before_validation {self.guid = ModelsExtensions::Extensions.get_guid}
+
   # User destroying is canceled
   before_destroy {false}
 
@@ -50,5 +52,18 @@ class User < ModelsExtensions::Extensions
     transaction.delete_from_cache if transaction.destroy
   end
 
-
+  # get all data by user from DB
+  def get_all_data
+    data = {user: self}
+    models = ModelsExtensions::Extensions.get_all_models
+    models.each do |model|
+      if model.instance_methods.include?(:user_guid)
+        data[model.to_s.underscore.to_sym] = []
+        model.where(user_guid: self.guid).each do |obj|
+          data[model.to_s.underscore.to_sym] << obj
+        end
+      end
+    end
+    data.to_json
+  end
 end
