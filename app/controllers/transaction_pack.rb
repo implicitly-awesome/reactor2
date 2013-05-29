@@ -28,11 +28,11 @@ Reactor2::App.controllers :transaction_pack do
   end
 
   post :create, map: '/api/v1/transaction_packs' do
-    @transaction_pack = TransactionPack.new
-    #transaction_pack.guid = ModelsExtensions::Extensions.get_guid
-    @transaction_pack.user = User.find_in_db(params[:user_guid])
-    @transaction_pack.put_in_cache if transaction_pack.save
-    response_with @transaction_pack
+    transaction_pack = TransactionPack.new
+    transaction_pack.guid = ModelsExtensions::Extensions.get_guid
+    transaction_pack.user = User.find_in_db(params[:user_guid])
+    transaction_pack.put_in_cache if transaction_pack.save
+    response_with transaction_pack
   end
 
   put :update, map: '/api/v1/transaction_packs/:user_guid' do
@@ -40,7 +40,7 @@ Reactor2::App.controllers :transaction_pack do
 
     unless transaction_pack
       transaction_pack = TransactionPack.new
-      #transaction_pack.guid = ModelsExtensions::Extensions.get_guid
+      transaction_pack.guid = ModelsExtensions::Extensions.get_guid
       transaction_pack.user = User.find_in_db(params[:user_guid])
       transaction_pack.put_in_cache if transaction_pack.save
     end

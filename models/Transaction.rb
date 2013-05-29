@@ -3,7 +3,7 @@ class Transaction < ModelsExtensions::Extensions
   include Mongoid::Document
   include Mongoid::Timestamps
 
-  before_validation {self.guid = ModelsExtensions::Extensions.get_guid}
+  #before_validation {self.guid = ModelsExtensions::Extensions.get_guid}
 
   field :guid, type: String
   field :user_guid, type: String

@@ -15,7 +15,7 @@ Reactor2::App.controllers :transaction do
 
   post :create, map: '/api/v1/transactions' do
     transaction = Transaction.new(JSON.parse(params[:transaction]))
-    #transaction.guid = ModelsExtensions::Extensions.get_guid
+    transaction.guid = ModelsExtensions::Extensions.get_guid
     transaction.user = User.find_in_db(params[:user_guid])
     transaction.put_in_cache if transaction.save
     response_with transaction

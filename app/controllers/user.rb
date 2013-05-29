@@ -15,7 +15,7 @@ Reactor2::App.controllers :user do
 
   post :create, map: '/api/v1/users' do
     user = User.new(JSON.parse(params[:user]))
-    #user.guid = ModelsExtensions::Extensions.get_guid
+    user.guid = ModelsExtensions::Extensions.get_guid
     user.put_in_cache if user.save
     response_with user
   end

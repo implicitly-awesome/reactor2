@@ -2,7 +2,7 @@ class User < ModelsExtensions::Extensions
   include Mongoid::Document
   include Mongoid::Timestamps
 
-  before_validation {self.guid = ModelsExtensions::Extensions.get_guid}
+  #before_validation {self.guid = ModelsExtensions::Extensions.get_guid}
 
   # User destroying is canceled
   before_destroy {false}
