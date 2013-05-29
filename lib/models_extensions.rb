@@ -44,20 +44,20 @@ module ModelsExtensions
       result
     end
 
-    def put_in_cache
-      if self.is_a? TransactionPack
-        # Padrino.cache.set("tp_#{self.user_guid}", self.to_json)
-        Padrino.cache.set("tp_#{self.user_guid}", self.to_json_with_transactions)
+    def to_json_rabl
+      json_template_path = "#{Padrino.root}/app/views/#{self.class.to_s.underscore}/show"
+      if File.exist? "#{json_template_path}.rabl"
+        Rabl.render(self, json_template_path)
       else
-        Padrino.cache.set(self.guid, self.to_json)
+        self.to_json
       end
     end
 
-    def put_in_cache_with
+    def put_in_cache
       if self.is_a? TransactionPack
-        Padrino.cache.set("tp_#{self.user_guid}", json)
+        Padrino.cache.set("tp_#{self.user_guid}", self.to_json_rabl)
       else
-        Padrino.cache.set(self.guid, json)
+        Padrino.cache.set(self.guid, self.to_json)
       end
     end
 

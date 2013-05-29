@@ -59,7 +59,7 @@ Reactor2::App.controllers :transaction_pack do
     end
 
     transaction_pack.delete_from_cache
-    transaction_pack.put_in_cache_with :transactions
+    transaction_pack.put_in_cache
     response_with transaction_pack, get_last_transaction_id(TransactionPack.get(params[:user_guid]))
   end
 
