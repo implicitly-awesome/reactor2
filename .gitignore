@@ -8,3 +8,5 @@ vendor/gems/*
 db/*.db
 .idea/workspace.xml
 .idea/*
+.ruby-gemset
+.ruby-version
