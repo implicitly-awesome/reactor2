@@ -28,11 +28,11 @@ Reactor2::App.controllers :transaction_pack do
   end
 
   post :create, map: '/api/v1/transaction_packs' do
-    transaction_pack = TransactionPack.new
+    @transaction_pack = TransactionPack.new
     #transaction_pack.guid = ModelsExtensions::Extensions.get_guid
-    transaction_pack.user = User.find_in_db(params[:user_guid])
-    transaction_pack.put_in_cache if transaction_pack.save
-    response_with transaction_pack
+    @transaction_pack.user = User.find_in_db(params[:user_guid])
+    @transaction_pack.put_in_cache_with(Rabl::Renderer.json(@transaction_pack, 'transaction_pack/show')) if transaction_pack.save
+    response_with @transaction_pack
   end
 
   put :update, map: '/api/v1/transaction_packs/:user_guid' do
@@ -42,7 +42,7 @@ Reactor2::App.controllers :transaction_pack do
       transaction_pack = TransactionPack.new
       #transaction_pack.guid = ModelsExtensions::Extensions.get_guid
       transaction_pack.user = User.find_in_db(params[:user_guid])
-      transaction_pack.put_in_cache if transaction_pack.save
+      @transaction_pack.put_in_cache_with(Rabl::Renderer.json(@transaction_pack, 'transaction_pack/show')) if transaction_pack.save
     end
 
     # new TransactionPack as storage for sync_pack's transactions
@@ -59,7 +59,7 @@ Reactor2::App.controllers :transaction_pack do
     end
 
     transaction_pack.delete_from_cache
-    transaction_pack.put_in_cache
+    transaction_pack.put_in_cache_with :transactions
     response_with transaction_pack, get_last_transaction_id(TransactionPack.get(params[:user_guid]))
   end
 
