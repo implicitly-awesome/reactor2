@@ -46,13 +46,14 @@ module ModelsExtensions
 
     def put_in_cache
       if self.is_a? TransactionPack
-        Padrino.cache.set("tp_#{self.user_guid}", self.to_json)
+        # Padrino.cache.set("tp_#{self.user_guid}", self.to_json)
+        Padrino.cache.set("tp_#{self.user_guid}", self.to_json_with_transactions)
       else
         Padrino.cache.set(self.guid, self.to_json)
       end
     end
 
-    def put_in_cache_with(json)
+    def put_in_cache_with
       if self.is_a? TransactionPack
         Padrino.cache.set("tp_#{self.user_guid}", json)
       else

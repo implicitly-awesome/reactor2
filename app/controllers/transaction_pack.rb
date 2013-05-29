@@ -31,7 +31,7 @@ Reactor2::App.controllers :transaction_pack do
     @transaction_pack = TransactionPack.new
     #transaction_pack.guid = ModelsExtensions::Extensions.get_guid
     @transaction_pack.user = User.find_in_db(params[:user_guid])
-    @transaction_pack.put_in_cache_with(Rabl::Renderer.json(@transaction_pack, 'transaction_pack/show')) if transaction_pack.save
+    @transaction_pack.put_in_cache if transaction_pack.save
     response_with @transaction_pack
   end
 
@@ -42,7 +42,7 @@ Reactor2::App.controllers :transaction_pack do
       transaction_pack = TransactionPack.new
       #transaction_pack.guid = ModelsExtensions::Extensions.get_guid
       transaction_pack.user = User.find_in_db(params[:user_guid])
-      @transaction_pack.put_in_cache_with(Rabl::Renderer.json(@transaction_pack, 'transaction_pack/show')) if transaction_pack.save
+      @transaction_pack.put_in_cache if transaction_pack.save
     end
 
     # new TransactionPack as storage for sync_pack's transactions

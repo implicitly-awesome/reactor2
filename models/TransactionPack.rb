@@ -59,5 +59,8 @@ class TransactionPack < ModelsExtensions::Extensions
     transaction.delete_from_cache if transaction.destroy
   end
 
-
+  def to_json_with_transactions
+    json_template_path = "#{Padrino.root}/app/views/#{self.class.to_s.underscore}/show"
+    Rabl.render(self, json_template_path)
+  end
 end
