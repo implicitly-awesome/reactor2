@@ -6,13 +6,13 @@ class Transaction < ModelsExtensions::Extensions
   field :guid, type: String
   field :user_guid, type: String
   field :action, type: String                   # [c]reate || [u]pdate || [d]elete
-  field :coll_name, type: String          # collection that transaction for
-  field :coll_row_guid, type: String      # row ID in the collection that transaction for
+  field :coll_name, type: String                # collection that transaction for
+  field :coll_row_guid, type: String            # row ID in the collection that transaction for
   field :attrs, type: Hash                      # fields hash for [c]reate or [u]pdate
   field :handled, type: Boolean, default: false # status of the transaction: was handled by Worker or not
 
 
-  attr_accessible :guid, :user_guid, :action, :coll_name, :coll_row_guid, :attrs, :handled#, :transaction_pack_guid
+  attr_accessible :guid, :user_guid, :action, :coll_name, :coll_row_guid, :attrs, :handled
 
 
   validates :guid, uniqueness: true, presence: true

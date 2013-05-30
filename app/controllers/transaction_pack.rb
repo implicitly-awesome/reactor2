@@ -38,6 +38,7 @@ Reactor2::App.controllers :transaction_pack do
   end
 
   put :update, map: '/api/v1/transaction_packs/:user_guid' do
+    binding.pry
     transaction_pack = TransactionPack.create_from_json(TransactionPack.find_in_cache(params[:user_guid])) ||
         TransactionPack.find_in_db(params[:user_guid])
 
