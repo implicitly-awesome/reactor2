@@ -61,7 +61,7 @@ module ModelsExtensions
       if self.is_a? TransactionPack
         Padrino.cache.set("tp_#{self.user_guid}", self.to_json_rabl)
       else
-        Padrino.cache.set(self.guid, self.to_json)
+        Padrino.cache.set(self.guid, self.to_json_rabl)
       end
     end
 

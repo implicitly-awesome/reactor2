@@ -16,6 +16,8 @@ class TransactionPack < ModelsExtensions::Extensions
   validates :guid, uniqueness: true, presence: true
   validates :user_guid, presence: true
 
+  embeds_many :transactions, inverse_of: :transaction_pack
+
 
   # get user
   def user
@@ -31,19 +33,19 @@ class TransactionPack < ModelsExtensions::Extensions
     end
   end
 
-  # get the list of transactions
-  def transactions
-    Transaction.where(transaction_pack_guid: self.guid) || []
-  end
-
-  # add a transaction to the list
-  def add_transaction(transaction)
-    transaction.transaction_pack = self
-    if transaction.save
-      transaction.delete_from_cache
-      transaction.put_in_cache
-    end
-  end
+  ## get the list of transactions
+  #def transactions
+  #  Transaction.where(transaction_pack_guid: self.guid) || []
+  #end
+  #
+  ## add a transaction to the list
+  #def add_transaction(transaction)
+  #  transaction.transaction_pack = self
+  #  if transaction.save
+  #    transaction.delete_from_cache
+  #    transaction.put_in_cache
+  #  end
+  #end
 
   # nullify a transaction in the list
   def nullify_transaction(transaction)
