@@ -27,21 +27,24 @@ Reactor2::App.controllers :transaction_pack do
     render 'transaction/index'
   end
 
+  # DEPRICATED - use Update method
   post :create, map: '/api/v1/transaction_packs' do
-    transaction_pack = TransactionPack.new
-    transaction_pack.guid = ModelsExtensions::Extensions.get_guid
-    transaction_pack.user = User.find_in_db(params[:user_guid])
-    transaction_pack.put_in_cache if transaction_pack.save
-    response_with transaction_pack
+    #transaction_pack = TransactionPack.new
+    #transaction_pack.guid = ModelsExtensions::Extensions.get_guid
+    #transaction_pack.user = User.find_in_db(params[:user_guid])
+    #transaction_pack.put_in_cache if transaction_pack.save
+    #response_with transaction_pack
+    response = 'Deprecated'
   end
 
   put :update, map: '/api/v1/transaction_packs/:user_guid' do
-    transaction_pack = TransactionPack.get(params[:user_guid])
+    transaction_pack = TransactionPack.create_from_json(TransactionPack.find_in_cache(params[:user_guid])) ||
+        TransactionPack.find_in_db(params[:user_guid])
 
     unless transaction_pack
       transaction_pack = TransactionPack.new
       transaction_pack.guid = ModelsExtensions::Extensions.get_guid
-      transaction_pack.user_guid = params[:user_guid]
+      transaction_pack.user_guid = params[:user_guid] if User.get(params[:user_guid])
       transaction_pack.put_in_cache if transaction_pack.save
     end
 
@@ -51,7 +54,7 @@ Reactor2::App.controllers :transaction_pack do
     transactions.each do |t|
       transaction = Transaction.new(t)
       transaction.guid = ModelsExtensions::Extensions.get_guid
-      transaction.user_guid = params[:user_guid]
+      transaction.user_guid = params[:user_guid] if User.get(params[:user_guid])
       transaction_pack.transactions.push transaction
     end
 
