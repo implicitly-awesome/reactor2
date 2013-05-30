@@ -2,6 +2,10 @@ require 'rack/auth/digest/md5'
 
 module ModelsExtensions
   class Extensions
+    def initialize
+      @attributes = {}
+    end
+
     def self.get_guid(datetime=(Time.now.getutc.to_f * 1000.0).to_i, shard=1, id=rand(999))
       zero_date = (Time.new(2012,1,1).getutc.to_f * 1000.0).to_i
       delta_time = (datetime - zero_date)
@@ -68,6 +72,15 @@ module ModelsExtensions
         Padrino.cache.delete(self.guid)
       end
     end
+
+    #def method_missing(name, *args)
+    #  attribute = name.to_s
+    #  if attribute =~ /=$/
+    #    @attributes[attribute.chop] = args[0]
+    #  else
+    #    @attributes[attribute]
+    #  end
+    #end
 
 
     private
