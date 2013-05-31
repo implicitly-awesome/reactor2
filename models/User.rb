@@ -2,8 +2,6 @@ class User < ModelsExtensions::Extensions
   include Mongoid::Document
   include Mongoid::Timestamps
 
-  #before_validation {self.guid = ModelsExtensions::Extensions.get_guid}
-
   # User destroying is canceled
   before_destroy {false}
 
@@ -56,6 +54,7 @@ class User < ModelsExtensions::Extensions
   def get_all_data
     data = {user: self}
     models = ModelsExtensions::Extensions.get_all_models
+    models.delete(Transaction) # transactions already included in transaction pack
     models.each do |model|
       if model.instance_methods.include?(:user_guid)
         data[model.to_s.underscore.to_sym] = []

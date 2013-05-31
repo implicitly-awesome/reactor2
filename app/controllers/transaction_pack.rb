@@ -1,6 +1,6 @@
 Reactor2::App.controllers :transaction_pack do
   before {content_type :json}
-  before :show, :actual, :last do
+  before :show, :actual, :last, :transactions_index, :transactions_show do
     @transaction_pack = TransactionPack.get(params[:user_guid])
   end
 
@@ -27,40 +27,41 @@ Reactor2::App.controllers :transaction_pack do
     render 'transaction/index'
   end
 
+  # DEPRICATED - use Update method
   post :create, map: '/api/v1/transaction_packs' do
-    transaction_pack = TransactionPack.new
-    transaction_pack.guid = ModelsExtensions::Extensions.get_guid
-    transaction_pack.user = User.find_in_db(params[:user_guid])
-    transaction_pack.put_in_cache if transaction_pack.save
-    response_with transaction_pack
+    #transaction_pack = TransactionPack.new
+    #transaction_pack.guid = ModelsExtensions::Extensions.get_guid
+    #transaction_pack.user = User.find_in_db(params[:user_guid])
+    #transaction_pack.put_in_cache if transaction_pack.save
+    #response_with transaction_pack
+    response = 'Deprecated'
   end
 
   put :update, map: '/api/v1/transaction_packs/:user_guid' do
-    transaction_pack = TransactionPack.get(params[:user_guid])
+    binding.pry
+    transaction_pack = TransactionPack.create_from_json(TransactionPack.find_in_cache(params[:user_guid])) ||
+        TransactionPack.find_in_db(params[:user_guid])
 
     unless transaction_pack
       transaction_pack = TransactionPack.new
       transaction_pack.guid = ModelsExtensions::Extensions.get_guid
-      transaction_pack.user = User.find_in_db(params[:user_guid])
+      transaction_pack.user_guid = params[:user_guid] if User.get(params[:user_guid])
       transaction_pack.put_in_cache if transaction_pack.save
     end
 
     # new TransactionPack as storage for sync_pack's transactions
-    #transactions = TransactionPack.new(JSON.parse(params[:transaction_pack].to_s)).sync_pack
     transactions = JSON.parse(params[:sync_pack])
 
     transactions.each do |t|
       transaction = Transaction.new(t)
       transaction.guid = ModelsExtensions::Extensions.get_guid
-      transaction.user = User.find_in_db(params[:user_guid])
-      transaction.transaction_pack = transaction_pack
-      transaction.save
-      transaction_pack.add_transaction transaction
+      transaction.user_guid = params[:user_guid] if User.get(params[:user_guid])
+      transaction_pack.transactions.push transaction
     end
 
     transaction_pack.delete_from_cache
     transaction_pack.put_in_cache
-    response_with transaction_pack, get_last_transaction_id(TransactionPack.get(params[:user_guid]))
+    response_with transaction_pack, get_last_transaction_id(transaction_pack)
   end
 
   delete :destroy, map: '/api/v1/transaction_packs/' do
@@ -70,5 +71,15 @@ Reactor2::App.controllers :transaction_pack do
       transaction_pack.delete_from_cache
       transaction_pack.destroy
     end
+  end
+
+  get :transactions_index, map: '/api/v1/transaction_packs/:user_guid/transactions/' do
+    @transactions = @transaction_pack.transactions
+    render 'transaction/index'
+  end
+
+  get :transactions_show, map: '/api/v1/transaction_packs/:user_guid/transactions/:guid' do
+    @transaction = @transaction_pack.transactions.where(guid: params[:guid]).first
+    render 'transaction/show'
   end
 end

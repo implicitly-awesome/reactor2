@@ -19,11 +19,7 @@ module ModelsExtensions
     end
 
     def self.get(guid)
-      begin
-        self.new(JSON.parse(self.find_in_cache(guid)))
-      rescue
-        self.find_in_db(guid)
-      end
+      self.find_in_cache(guid) ? create_from_json(self.find_in_cache(guid)) : self.find_in_db(guid)
     end
 
     def self.find_in_cache(guid)
@@ -61,7 +57,7 @@ module ModelsExtensions
       if self.is_a? TransactionPack
         Padrino.cache.set("tp_#{self.user_guid}", self.to_json_rabl)
       else
-        Padrino.cache.set(self.guid, self.to_json)
+        Padrino.cache.set(self.guid, self.to_json_rabl)
       end
     end
 
@@ -87,6 +83,47 @@ module ModelsExtensions
 
     def set_guid
       self.guid = ModelsExtensions::Extensions.get_guid
+    end
+
+    def self.create_from_json(json)
+      hash = json ? JSON.parse(json) : nil
+      if hash
+        tp = self.new(hash)
+
+        if tp.is_a? User
+          obj = self.find_in_db(tp.guid)
+          obj.destroy if obj
+
+          tp.delete_from_cache if tp.save
+
+          hash.each do |k, v|
+            if v.is_a? Array
+              v.each do |i|
+                tp.send("#{k}").send(:create!, i)
+              end
+            end
+          end
+          tp
+        else
+          if User.get(tp.send(:user_guid))
+            obj = self.to_s == 'TransactionPack' ? self.find_in_db(tp.user_guid) : self.find_in_db(tp.guid)
+            obj.destroy if obj
+
+            tp.delete_from_cache if tp.save
+
+            hash.each do |k, v|
+              if v.is_a? Array
+                v.each do |i|
+                  tp.send("#{k}").send(:create!, i)
+                end
+              end
+            end
+            tp
+          else
+            nil
+          end
+        end
+      end
     end
   end
 end

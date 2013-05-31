@@ -2,8 +2,6 @@ class TransactionPack < ModelsExtensions::Extensions
   include Mongoid::Document
   include Mongoid::Timestamps
 
-  #before_validation {self.guid = ModelsExtensions::Extensions.get_guid}
-
   field :guid, type: String
   field :user_guid, type: String
   # package of transactions that should be included to transaction_pack
@@ -15,6 +13,8 @@ class TransactionPack < ModelsExtensions::Extensions
 
   validates :guid, uniqueness: true, presence: true
   validates :user_guid, presence: true
+
+  embeds_many :transactions, inverse_of: :transaction_pack
 
 
   # get user
@@ -28,20 +28,6 @@ class TransactionPack < ModelsExtensions::Extensions
       self.user_guid = user.guid
     else
       self.user_guid = nil
-    end
-  end
-
-  # get the list of transactions
-  def transactions
-    Transaction.where(transaction_pack_guid: self.guid) || []
-  end
-
-  # add a transaction to the list
-  def add_transaction(transaction)
-    transaction.transaction_pack = self
-    if transaction.save
-      transaction.delete_from_cache
-      transaction.put_in_cache
     end
   end
 
