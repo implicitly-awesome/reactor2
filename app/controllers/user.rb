@@ -1,5 +1,6 @@
 Reactor2::App.controllers :user do
   before {content_type :json}
+  before :restrict_access
   before :show do
     @user = User.get(params[:guid])
   end
@@ -15,9 +16,10 @@ Reactor2::App.controllers :user do
 
   post :create, map: '/api/v1/users' do
     user = User.new(JSON.parse(params[:user]))
-    user.guid = ModelsExtensions::Extensions.get_guid
+    user.guid = User.get_guid
+    user.set_password_digest(user.password)
     user.put_in_cache if user.save
-    response_with user
+    response_with user, {guid: user.guid, password_digest: user.password_digest}
   end
 
   put :update, map: '/api/v1/users/:guid' do
@@ -42,4 +44,11 @@ Reactor2::App.controllers :user do
   get :full_db, map: '/api/v1/users/:guid/full_db' do
     response = User.find_in_db(params[:guid]).get_all_data
   end
+
+  private
+
+    def restrict_access
+      api_key = ApiKey.get(params[:access_token])
+      head :unauthorized unless api_key
+    end
 end

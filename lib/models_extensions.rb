@@ -19,7 +19,7 @@ module ModelsExtensions
     end
 
     def self.get(guid)
-      self.find_in_cache(guid) ? create_from_json(self.find_in_cache(guid)) : self.find_in_db(guid)
+      self.find_in_cache(guid) ? build_from_json(self.find_in_cache(guid)) : self.find_in_db(guid)
     end
 
     def self.find_in_cache(guid)
@@ -85,40 +85,40 @@ module ModelsExtensions
       self.guid = ModelsExtensions::Extensions.get_guid
     end
 
-    def self.create_from_json(json)
+    def self.build_from_json(json, &block)
       hash = json ? JSON.parse(json) : nil
       if hash
-        tp = self.new(hash)
+        entity = self.new(hash)
 
-        if tp.is_a? User
-          obj = self.find_in_db(tp.guid)
-          obj.destroy if obj
+        unless entity.is_a? TransactionPack
+          entity.guid = self.get_guid
+        end
 
-          tp.delete_from_cache if tp.save
+        if entity.is_a? User
+          entity.set_password_digest(entity.password)
+
+          block.call if block_given?
 
           hash.each do |k, v|
             if v.is_a? Array
               v.each do |i|
-                tp.send("#{k}").send(:create!, i)
+                entity.send("#{k}").send(:build, i)
               end
             end
           end
-          tp
+          entity
         else
-          if User.get(tp.send(:user_guid))
-            obj = self.to_s == 'TransactionPack' ? self.find_in_db(tp.user_guid) : self.find_in_db(tp.guid)
-            obj.destroy if obj
-
-            tp.delete_from_cache if tp.save
+          if User.get(entity.send(:user_guid))
+            block.call if block_given?
 
             hash.each do |k, v|
               if v.is_a? Array
                 v.each do |i|
-                  tp.send("#{k}").send(:create!, i)
+                  entity.send("#{k}").send(:build, i)
                 end
               end
             end
-            tp
+            entity
           else
             nil
           end

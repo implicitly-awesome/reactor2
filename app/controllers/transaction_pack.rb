@@ -1,5 +1,6 @@
 Reactor2::App.controllers :transaction_pack do
   before {content_type :json}
+  before :restrict_access
   before :show, :actual, :last, :transactions_index, :transactions_show do
     @transaction_pack = TransactionPack.get(params[:user_guid])
   end
@@ -38,7 +39,6 @@ Reactor2::App.controllers :transaction_pack do
   end
 
   put :update, map: '/api/v1/transaction_packs/:user_guid' do
-    binding.pry
     transaction_pack = TransactionPack.create_from_json(TransactionPack.find_in_cache(params[:user_guid])) ||
         TransactionPack.find_in_db(params[:user_guid])
 
@@ -82,4 +82,11 @@ Reactor2::App.controllers :transaction_pack do
     @transaction = @transaction_pack.transactions.where(guid: params[:guid]).first
     render 'transaction/show'
   end
+
+  private
+
+    def restrict_access
+       api_key = ApiKey.get(params[:access_token])
+       head :unauthorized unless api_key
+    end
 end
