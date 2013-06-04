@@ -1,0 +1,52 @@
+doctype
+html
+  head
+    meta http-equiv='Content-Type' content='text/html; charset=utf-8'
+    link href='http://fonts.googleapis.com/css?family=Raleway:400,200,100,300,500' rel='stylesheet' type='text/css'
+    title Improva Mailer
+  body
+    table style='width:100%; border:0px;'
+      tr
+        td
+          table style='width:600px; align=left; border:0px;'
+            tr
+              td width='100px' align='right'
+                h1 style="font-family: 'Raleway'; padding-left:16px; color: #FF4500; font-weight: 300; font-size: 3.0em;"
+                  |Improva
+              td width='500px' align='left'
+                p style="font-family: 'Raleway'; font-weight: 300; font-size: small; padding-top:5px"
+                  |Happiness - is the fullness of life.
+            tr
+              td colspan='2' style='padding-left: 20px; vertical-align: top;'
+                p
+                  |Account Details for
+                  b
+                    |&nbsp;#{user.login}
+                  |&nbsp;at Improva.
+                p
+                  |Thank you for registering at. Your account is created and must be activated before you can use it.
+                p
+                  |To activate the account click on the following link or copy-paste it in your browser:
+                p
+                  |#{link}
+                p
+                  |After activation you may enter to Improva using the following login:
+                  b
+                    |&nbsp;#{user.login}.
+                hr
+            tr
+              td colspan='2'
+                table width='100%'
+                  tr
+                    td align='left'
+                      address style='padding-left:16px;'
+                        strong Improva, Inc
+                        br Some street
+                        br Some, Country
+                        br
+                        abbr title='Phone' P:
+                        |(123) 456-78-90
+                      address style='padding-left:16px;'
+                        strong Please mail to us
+                        br
+                        a href='mailto:support@improva.com'

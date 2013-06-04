@@ -29,6 +29,15 @@ module Reactor2
     # set :cache, Padrino::Cache::Store::File.new(Padrino.root('tmp', app_name.to_s, 'cache')) # default choice
     #
 
+    set :delivery_method, :smtp => {
+        :address              => "smtp.improva.com",
+        :port                 => 587,
+        :user_name            => 'support@improva.com',
+        :password             => 'Improva2013',
+        :authentication       => :plain,
+        :enable_starttls_auto => false
+    }
+
     ##
     # Application configuration options
     #

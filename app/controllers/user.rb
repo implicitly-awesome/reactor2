@@ -18,7 +18,10 @@ Reactor2::App.controllers :user do
     user = User.new(JSON.parse(params[:user]))
     user.guid = User.get_guid
     user.set_password_digest(user.password)
-    user.put_in_cache if user.save
+    if user.save
+      user.put_in_cache
+      deliver(:user_notifier, :confirmation, user)
+    end
     response_with user, {guid: user.guid, password_digest: user.password_digest}
   end
 
@@ -27,6 +30,20 @@ Reactor2::App.controllers :user do
     if user && user.update_attributes(JSON.parse(params[:user]))
       user.delete_from_cache
       user.put_in_cache
+    end
+    response_with user
+  end
+
+  get :confirmation, map: '/api/v1/confirmation/:hashs' do
+    user = User.where(hashs: params[:hashs])
+    if user.count == 1
+      user = user.first
+      user.confirmed = true
+      user.hashs = nil
+      if user.save
+        user.delete_from_cache
+        user.put_in_cache
+      end
     end
     response_with user
   end
