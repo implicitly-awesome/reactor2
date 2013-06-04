@@ -43,6 +43,7 @@ class TransactionPack < ModelsExtensions::Extensions
     transaction.delete_from_cache if transaction.destroy
   end
 
+  # create an transaction pack object from a json string
   def self.create_from_json(json, &block)
     hash = json ? JSON.parse(json) : nil
     if hash
@@ -55,6 +56,7 @@ class TransactionPack < ModelsExtensions::Extensions
         if tp.save
           tp.delete_from_cache
           tp.put_in_cache
+          # exec block after save if it was given
           block.call if block_given?
         end
 

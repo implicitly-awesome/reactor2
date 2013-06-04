@@ -5,15 +5,18 @@ Reactor2::App.controllers :user do
     @user = User.get(params[:guid])
   end
 
+  # get the list of users
   get :index, map: '/api/v1/users' do
     @users = User.all
     render 'user/index'
   end
 
+  # get exact user from the list
   get :show, map: '/api/v1/users/:guid' do
     render 'user/show'
   end
 
+  # create a user
   post :create, map: '/api/v1/users' do
     user = User.new(JSON.parse(params[:user]))
     user.guid = User.get_guid
@@ -25,6 +28,7 @@ Reactor2::App.controllers :user do
     response_with user, {guid: user.guid, password_digest: user.password_digest}
   end
 
+  # update the user
   put :update, map: '/api/v1/users/:guid' do
     user = User.find_in_db(params[:guid])
     if user && user.update_attributes(JSON.parse(params[:user]))
@@ -34,6 +38,7 @@ Reactor2::App.controllers :user do
     response_with user
   end
 
+  # confirm user who has requested hash, refresh user in cache
   get :confirmation, map: '/api/v1/confirmation/:hashs' do
     user = User.where(hashs: params[:hashs])
     if user.count == 1
@@ -48,6 +53,7 @@ Reactor2::App.controllers :user do
     response_with user
   end
 
+  # delete user from DB and cache
   delete :destroy, map: '/api/v1/users/' do
     user = User.find_in_db(params[:guid])
 
@@ -58,6 +64,7 @@ Reactor2::App.controllers :user do
     end
   end
 
+  # get all data for the exact user
   get :full_db, map: '/api/v1/users/:guid/full_db' do
     response = User.find_in_db(params[:guid]).get_all_data
   end
