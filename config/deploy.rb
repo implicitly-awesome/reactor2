@@ -4,7 +4,7 @@ require 'bundler/capistrano'
 require 'rvm/capistrano'
 
 #server "192.168.1.55", :web, :app, :db, primary: true
-server "ec2-54-244-164-253.us-west-2.compute.amazonaws.com", :web, :app, :db, primary: true
+server "ec2-54-244-82-4.us-west-2.compute.amazonaws.com", :web, :app, :db, primary: true
 ssh_options[:keys] = [File.join(ENV["HOME"], ".ssh", "improva.pem")]
 
 set :application,   "reactor2"
