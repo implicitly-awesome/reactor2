@@ -6,9 +6,11 @@ Reactor2::App.controllers :user do
   end
 
   # get the list of users
+  # DEPRECATED
   get :index, map: '/api/v1/users' do
-    @users = User.all
-    render 'user/index'
+    #@users = User.all
+    #render 'user/index'
+    response = 'Deprecated'
   end
 
   # get exact user from the list

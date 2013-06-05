@@ -206,16 +206,14 @@ end
 
 Given(/^I have the list of entities:$/) do |table|
   table.map_headers!('Model' => :model, 'Attrs' => :attrs)
+  i = 0
   table.hashes.each do |h|
     cls = Object.const_get(h[:model])
-    cls.send(:create,JSON.parse(h[:attrs]))
+    obj = cls.new(JSON.parse(h[:attrs]))
+    obj.guid = i
+    i = i + 1
+    obj.save
   end
-end
-
-When(/^the quantity of ([^"]*) is "(\d+)"$/) do |model, count|
-  cls = Object.const_get(model)
-  objs = cls.send(:all)
-  objs.send(:count).should == count.to_i
 end
 
 Given(/^the TransactionPack with the following:$/) do |table|
@@ -243,5 +241,24 @@ Given(/^the Transaction with the following:$/) do |table|
   table.hashes.each do |h|
     @transaction = Transaction.create(h)
     @transaction.put_in_cache
+  end
+end
+
+Then (/^there are (\d+) ([^"]*) records in the (Cache|Database)/) do |count, model_name, storage|
+  cls = Object.const_get(model_name)
+  objs = cls.all
+
+  if storage == 'Cache'
+    quantity = 0
+    objs.each do |o|
+      if model_name == 'TransactionPack'
+        quantity =+ 1 if cls.find_in_cache('tp_'+o.user_guid)
+      else
+        quantity =+ 1 if cls.find_in_cache(o.guid)
+      end
+    end
+    quantity.should == count.to_i
+  else
+    objs.count.should == count.to_i
   end
 end
