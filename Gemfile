@@ -4,9 +4,10 @@ gem 'rack', '1.5.2'
 gem 'bcrypt-ruby', '~> 3.0.1'
 
 gem 'rake'
-gem 'tilt', '1.3.6'
+gem 'tilt', '~> 1.3.6'
 gem 'rabl', '~> 0.8.4'
 gem 'oj', '~> 2.0.12'
+gem 'activesupport', '~> 3.2.13'
 
 gem 'sass'
 gem 'slim'
