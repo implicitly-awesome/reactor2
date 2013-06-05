@@ -39,7 +39,6 @@ class User < ModelsExtensions::Extensions
   validates :email, length: {maximum: 1000}, format: { with: VALID_EMAIL_REGEX }
   validates :password, length: {maximum: 100, minimum: 6}, on: :create
 
-
   # set confirmation hash
   def set_confirm_hash
     ticks = (Time.now.to_f*1000)-(Time.new(1970,1,1).to_f*1000)

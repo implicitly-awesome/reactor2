@@ -2,7 +2,7 @@ class TransactionPack < ModelsExtensions::Extensions
   include Mongoid::Document
   include Mongoid::Timestamps
 
-  field :user_guid, type: String
+  field :user_guid, as: :guid, type: String
   # package of transactions that should be included to transaction_pack
   field :sync_pack, type: Array
 
@@ -13,7 +13,6 @@ class TransactionPack < ModelsExtensions::Extensions
   validates :user_guid, presence: true
 
   embeds_many :transactions, inverse_of: :transaction_pack
-
 
   # get user
   def user

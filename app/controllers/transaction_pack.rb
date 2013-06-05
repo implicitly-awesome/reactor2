@@ -49,7 +49,7 @@ Reactor2::App.controllers :transaction_pack do
     # create new transaction pack because it's not exists
     unless transaction_pack
       transaction_pack = TransactionPack.new
-      transaction_pack.user_guid = params[:user_guid] if User.get(params[:user_guid])
+      transaction_pack.guid = params[:user_guid] if User.get(params[:user_guid])
       transaction_pack.put_in_cache if transaction_pack.save
     end
 

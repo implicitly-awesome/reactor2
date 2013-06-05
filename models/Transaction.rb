@@ -21,7 +21,6 @@ class Transaction < ModelsExtensions::Extensions
 
   embedded_in :transaction_pack, inverse_of: :transactions
 
-
   # get user
   def user
     User.get(self.user_guid)
