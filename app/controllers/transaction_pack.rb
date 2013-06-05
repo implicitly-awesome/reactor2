@@ -18,7 +18,7 @@ Reactor2::App.controllers :transaction_pack do
 
   # give last user transaction
   get :last, map: '/api/v1/transaction_packs/:user_guid/last/' do
-    response = get_last_transaction_id(@transaction_pack).to_json
+    response = get_last_transaction(@transaction_pack)
   end
 
   # give only actual transactions (id > :guid_on_devise)
@@ -49,7 +49,6 @@ Reactor2::App.controllers :transaction_pack do
     # create new transaction pack because it's not exists
     unless transaction_pack
       transaction_pack = TransactionPack.new
-      transaction_pack.guid = ModelsExtensions::Extensions.get_guid
       transaction_pack.user_guid = params[:user_guid] if User.get(params[:user_guid])
       transaction_pack.put_in_cache if transaction_pack.save
     end

@@ -25,7 +25,7 @@ Reactor2::App.controllers :user do
     user.set_password_digest(user.password)
     if user.save
       user.put_in_cache
-      deliver(:user_notifier, :confirmation, user)
+      deliver(:user_notifier, :confirmation, user) unless PADRINO_ENV == 'test'
     end
     response_with user, {guid: user.guid, password_digest: user.password_digest}
   end
