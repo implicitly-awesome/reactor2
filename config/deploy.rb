@@ -15,7 +15,8 @@ set :use_sudo,      false
 set :keep_releases, 5
 
 set :scm,           :git
-set :branch,        "master"
+#set :branch,        "master"
+set :branch,        "develop"
 set :repository,    "git@github.com:madeinussr/#{application}"
 set :deploy_via,    :remote_cache
 default_run_options[:pty] = true
