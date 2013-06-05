@@ -38,7 +38,7 @@ Reactor2::App.mailer :user_notifier do
   email :confirmation do |user|
     from 'support@improva.com'
     to user.email
-    host = PADRINO_ENV == 'production' ? 'ec2-54-245-59-116.us-west-2.compute.amazonaws.com' : 'localhost:3000'
+    host = PADRINO_ENV == 'production' ? 'ec2-54-244-82-4.us-west-2.compute.amazonaws.com' : 'localhost:3000'
     link = "http://#{host}/api/v1/confirmation/#{user.hashs}"
     subject 'Improva: sign up confirmation'
     locals user: user, link: link
