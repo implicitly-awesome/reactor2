@@ -3,9 +3,9 @@ require 'bcrypt'
 
 class User < ModelsExtensions::Extensions
   include Mongoid::Document
-  include Mongoid::Timestamps
 
-  before_create :set_confirm_hash
+  before_create :set_created_at, :set_updated_at, :set_confirm_hash
+  before_update :set_updated_at
   before_save do
     self.email = email.downcase
     self.password = nil
@@ -14,16 +14,18 @@ class User < ModelsExtensions::Extensions
   before_destroy {false}
 
 
-  field :guid, type: Integer
-  field :alias, type: String
-  field :login, type: String
-  field :name, type: String
-  field :password, type: String
-  field :password_digest, type: String
-  field :email, type: String
-  field :birthday, type: Date
-  field :confirmed, type: Boolean
-  field :hashs, type: String
+  field :users_guid, as: :guid, type: Integer
+  field :users_alias, as: :alias, type: String
+  field :users_login, as: :login, type: String
+  field :name, as: :name, type: String
+  field :password, as: :password, type: String
+  field :users_pwd, as: :password_digest, type: String
+  field :users_email, as: :email, type: String
+  field :users_birthday, as: :birthday, type: Date
+  field :users_is_confirmed, as: :confirmed, type: Integer, default: 0
+  field :users_hash, as: :hashs, type: String
+  field :users_create_dt, as: :created_at, type: DateTime
+  field :users_timestamp, as: :updated_at, type: DateTime
 
 
   attr_accessible :guid, :alias, :login, :name, :password, :email, :birthday, :confirmed, :hashs
@@ -76,5 +78,16 @@ class User < ModelsExtensions::Extensions
 
   def set_password_digest(password)
     self.password_digest = BCrypt::Password.create(password)
+  end
+
+
+  private
+
+  def set_created_at
+    self.created_at = Time.now.getutc
+  end
+
+  def set_updated_at
+    self.updated_at = Time.now.getutc
   end
 end

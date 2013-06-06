@@ -48,7 +48,7 @@ Reactor2::App.controllers :user do
     if user.count == 1
       user = user.first
       # Confirm user
-      user.confirmed = true
+      user.confirmed = 1
       # Get hashs nil
       user.hashs = nil
       # Refresh in the cache
