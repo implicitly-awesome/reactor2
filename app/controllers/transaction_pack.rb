@@ -2,7 +2,7 @@ Reactor2::App.controllers :transaction_pack do
   before {content_type :json}
   before :restrict_access
   before :show, :actual, :last, :transactions_index, :transactions_show do
-    @transaction_pack = TransactionPack.get(params[:user_guid])
+    @transaction_pack = TransactionPack.get(params[:users_guid])
   end
 
   # Get the list of transaction packs
@@ -12,17 +12,17 @@ Reactor2::App.controllers :transaction_pack do
   end
 
   # Get exact transaction pack
-  get :show, map: '/api/v1/transaction_packs/:user_guid' do
+  get :show, map: '/api/v1/transaction_packs/:users_guid' do
     render 'transaction_pack/show'
   end
 
   # Give last user transaction
-  get :last, map: '/api/v1/transaction_packs/:user_guid/last/' do
+  get :last, map: '/api/v1/transaction_packs/:users_guid/last/' do
     response = get_last_transaction(@transaction_pack)
   end
 
   # Give only actual transactions (id > :guid_on_devise)
-  get :actual, map: '/api/v1/transaction_packs/:user_guid/last/:guid_on_devise' do
+  get :actual, map: '/api/v1/transaction_packs/:users_guid/last/:guid_on_devise' do
     @transactions = []
     if @transaction_pack && @transaction_pack.transactions
       @transaction_pack.transactions.each do |t|
@@ -38,22 +38,22 @@ Reactor2::App.controllers :transaction_pack do
   post :create, map: '/api/v1/transaction_packs' do
     #transaction_pack = TransactionPack.new
     #transaction_pack.guid = ModelsExtensions::Extensions.get_guid
-    #transaction_pack.user = User.find_in_db(params[:user_guid])
+    #transaction_pack.user = User.find_in_db(params[:users_guid])
     #transaction_pack.put_in_cache if transaction_pack.save
     #response_with transaction_pack
     response = 'Deprecated'
   end
 
   # Update a transaction pack if it exists, if not - create it
-  put :update, map: '/api/v1/transaction_packs/:user_guid' do
+  put :update, map: '/api/v1/transaction_packs/:users_guid' do
     # try get transaction pack from cache or from the DB
-    transaction_pack = TransactionPack.create_from_json(TransactionPack.find_in_cache(params[:user_guid])) ||
-        TransactionPack.find_in_db(params[:user_guid])
+    transaction_pack = TransactionPack.create_from_json(TransactionPack.find_in_cache(params[:users_guid])) ||
+        TransactionPack.find_in_db(params[:users_guid])
 
     # Create new transaction pack because it's not exists
     unless transaction_pack
       transaction_pack = TransactionPack.new
-      transaction_pack.guid = params[:user_guid] if User.get(params[:user_guid])
+      transaction_pack.guid = params[:users_guid] if User.get(params[:users_guid])
       transaction_pack.put_in_cache if transaction_pack.save
     end
 
@@ -64,7 +64,7 @@ Reactor2::App.controllers :transaction_pack do
     transactions.each do |t|
       transaction = Transaction.new(t)
       transaction.guid = ModelsExtensions::Extensions.get_guid
-      transaction.user_guid = params[:user_guid] if User.get(params[:user_guid])
+      transaction.users_guid = params[:users_guid] if User.get(params[:users_guid])
       transaction_pack.transactions.push transaction
     end
 
@@ -78,7 +78,7 @@ Reactor2::App.controllers :transaction_pack do
 
   # Delete transaction pack from DB and cache
   delete :destroy, map: '/api/v1/transaction_packs/' do
-    transaction_pack = TransactionPack.find_in_db(params[:user_guid])
+    transaction_pack = TransactionPack.find_in_db(params[:users_guid])
 
     if transaction_pack
       transaction_pack.delete_from_cache
@@ -87,13 +87,13 @@ Reactor2::App.controllers :transaction_pack do
   end
 
   # Get transactions list embedded in transaction pack
-  get :transactions_index, map: '/api/v1/transaction_packs/:user_guid/transactions/' do
+  get :transactions_index, map: '/api/v1/transaction_packs/:users_guid/transactions/' do
     @transactions = @transaction_pack.transactions if @transaction_pack && @transaction_pack.transactions
     render 'transaction/index'
   end
 
   # Get exact transaction from the list of embedded in transaction pack
-  get :transactions_show, map: '/api/v1/transaction_packs/:user_guid/transactions/:guid' do
+  get :transactions_show, map: '/api/v1/transaction_packs/:users_guid/transactions/:guid' do
     @transaction = @transaction_pack.transactions.where(guid: params[:guid]).first if @transaction_pack && @transaction_pack.transactions
     render 'transaction/show'
   end

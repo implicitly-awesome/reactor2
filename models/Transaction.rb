@@ -4,7 +4,7 @@ class Transaction < ModelsExtensions::Extensions
   include Mongoid::Timestamps
 
   field :guid, type: String
-  field :user_guid, type: String
+  field :users_guid, type: String
   field :action, type: String                   # [c]reate || [u]pdate || [d]elete
   field :coll_name, type: String                # collection that transaction for
   field :coll_row_guid, type: String            # row ID in the collection that transaction for
@@ -12,7 +12,7 @@ class Transaction < ModelsExtensions::Extensions
   field :handled, type: Boolean, default: false # status of the transaction: was handled by Worker or not
 
 
-  attr_accessible :guid, :user_guid, :action, :coll_name, :coll_row_guid, :attrs, :handled
+  attr_accessible :guid, :users_guid, :action, :coll_name, :coll_row_guid, :attrs, :handled
 
 
   validates :guid, uniqueness: true, presence: true
@@ -23,15 +23,15 @@ class Transaction < ModelsExtensions::Extensions
 
   # Get user
   def user
-    User.get(self.user_guid)
+    User.get(self.users_guid)
   end
 
   # Set user
   def user=(user)
     if user
-      self.user_guid = user.guid
+      self.users_guid = user.guid
     else
-      self.user_guid = nil
+      self.users_guid = nil
     end
   end
 end

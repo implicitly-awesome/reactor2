@@ -46,7 +46,6 @@ When /^I send a ([^"]*) request (?:for|to) "([^"]*)"(?: with the following:)?$/ 
       request_opts[:input] = input
     end
   end
-
   request path, request_opts
 end
 
@@ -168,7 +167,7 @@ Then(/^the ([^"]*) should have "([^"]*)" field with value "([^"]*)"$/) do |model
   inst = self.instance_variable_get("@#{model_name.underscore}")
 
   if model_name == 'TransactionPack'
-    obj = cls.send(:get, inst.send(:user_guid))
+    obj = cls.send(:get, inst.send(:users_guid))
   else
     obj = cls.send(:get, inst.send(:guid))
   end
@@ -183,13 +182,13 @@ Then(/^the ([^"]*) should (not)?\s?exists in ([^"]*)$/) do |model_name, negative
 
   if store == 'CACHE'
     if model_name == 'TransactionPack'
-      obj = cls.send(:find_in_cache, inst.send(:user_guid))
+      obj = cls.send(:find_in_cache, inst.send(:users_guid))
     else
       obj = cls.send(:find_in_cache, inst.send(:guid))
     end
   elsif store == 'DB'
     if model_name == 'TransactionPack'
-      obj = cls.send(:find_in_db, inst.send(:user_guid))
+      obj = cls.send(:find_in_db, inst.send(:users_guid))
     else
       obj = cls.send(:find_in_db, inst.send(:guid))
     end
@@ -211,7 +210,7 @@ Given(/^I have the list of entities:$/) do |table|
     cls = Object.const_get(h[:model])
     obj = cls.new(JSON.parse(h[:attrs]))
     #if h[:model] == 'TransactionPack'
-    #  obj.user_guid = i
+    #  obj.users_guid = i
     #else
     #  obj.guid = i
     #end
@@ -221,7 +220,7 @@ Given(/^I have the list of entities:$/) do |table|
 end
 
 Given(/^the TransactionPack with the following:$/) do |table|
-  table.map_headers!('Guid' => :guid, 'User_guid' => :user_guid)
+  table.map_headers!('Guid' => :guid, 'User_guid' => :users_guid)
   table.hashes.each do |h|
     @transaction_pack = TransactionPack.create(h)
     @transaction_pack.put_in_cache
@@ -241,7 +240,7 @@ When(/^the ([^"]*) should (not)?\s?have "(\d+)" records in DB with field "([^"]*
 end
 
 Given(/^the Transaction with the following:$/) do |table|
-  table.map_headers!('Guid' => :guid, 'User_guid' => :user_guid, 'Action' => :action)
+  table.map_headers!('Guid' => :guid, 'User_guid' => :users_guid, 'Action' => :action)
   table.hashes.each do |h|
     @transaction = Transaction.create(h)
     @transaction.put_in_cache
@@ -256,7 +255,7 @@ Then (/^there are (\d+) ([^"]*) records in the (Cache|Database)/) do |count, mod
     quantity = 0
     objs.each do |o|
       if model_name == 'TransactionPack'
-        quantity =+ 1 if cls.find_in_cache(o.user_guid)
+        quantity =+ 1 if cls.find_in_cache(o.users_guid)
       else
         quantity =+ 1 if cls.find_in_cache(o.guid)
       end

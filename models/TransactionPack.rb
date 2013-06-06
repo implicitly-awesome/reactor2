@@ -2,29 +2,29 @@ class TransactionPack < ModelsExtensions::Extensions
   include Mongoid::Document
   include Mongoid::Timestamps
 
-  field :user_guid, as: :guid, type: String
+  field :users_guid, as: :guid, type: String
   # package of transactions that should be included to transaction_pack
   field :sync_pack, type: Array
 
 
-  attr_accessible :user_guid, :sync_pack
+  attr_accessible :users_guid, :sync_pack
 
 
-  validates :user_guid, presence: true
+  validates :users_guid, presence: true
 
   embeds_many :transactions, inverse_of: :transaction_pack
 
   # get user
   def user
-    User.get(self.user_guid)
+    User.get(self.users_guid)
   end
 
   # set user
   def user=(user)
     if user
-      self.user_guid = user.guid
+      self.users_guid = user.guid
     else
-      self.user_guid = nil
+      self.users_guid = nil
     end
   end
 
@@ -48,8 +48,8 @@ class TransactionPack < ModelsExtensions::Extensions
     if hash
       tp = self.new(hash)
 
-      if User.get(tp.user_guid)
-        obj = self.find_in_db(tp.user_guid)
+      if User.get(tp.users_guid)
+        obj = self.find_in_db(tp.users_guid)
         obj.destroy if obj
 
         if tp.save

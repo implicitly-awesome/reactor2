@@ -49,10 +49,10 @@ module ModelsExtensions
     end
 
     # Get record from database by user guid
-    # @param user_guid [String,Integer] guid of the user
+    # @param users_guid [String,Integer] guid of the user
     # @return [Class] model object of record that belongs to the user
-    def self.find_by_user(user_guid)
-      self.where(user_guid: user_guid).first
+    def self.find_by_user(users_guid)
+      self.where(users_guid: users_guid).first
     end
 
     # Get record from database by guid. If it was founded - put in cache
@@ -83,7 +83,7 @@ module ModelsExtensions
     # @return [Boolean] success of the operation
     def put_in_cache
       if self.is_a? TransactionPack
-        Padrino.cache.set("tp_#{self.user_guid}", self.to_json_rabl)
+        Padrino.cache.set("tp_#{self.users_guid}", self.to_json_rabl)
       else
         Padrino.cache.set(self.guid, self.to_json_rabl)
       end
@@ -93,7 +93,7 @@ module ModelsExtensions
     # @return [Boolean] success of the operation
     def delete_from_cache
       if self.is_a? TransactionPack
-        Padrino.cache.delete("tp_#{self.user_guid}")
+        Padrino.cache.delete("tp_#{self.users_guid}")
       else
         Padrino.cache.delete(self.guid)
       end
@@ -136,7 +136,7 @@ module ModelsExtensions
           end
           entity
         else
-          if User.get(entity.send(:user_guid))
+          if User.get(entity.send(:users_guid))
             block.call if block_given?
 
             hash.each do |k, v|
