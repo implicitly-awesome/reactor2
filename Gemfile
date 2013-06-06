@@ -2,6 +2,7 @@ source 'https://rubygems.org'
 
 gem 'rack', '1.5.2'
 gem 'bcrypt-ruby', '~> 3.0.1'
+gem 'yard'
 
 gem 'rake'
 gem 'tilt', '~> 1.3.6'
