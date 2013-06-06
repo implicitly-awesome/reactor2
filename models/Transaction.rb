@@ -1,4 +1,4 @@
-# transaction from devices for synchronisation with DB
+# Transaction from devices for synchronisation with DB
 class Transaction < ModelsExtensions::Extensions
   include Mongoid::Document
   include Mongoid::Timestamps
@@ -21,12 +21,12 @@ class Transaction < ModelsExtensions::Extensions
 
   embedded_in :transaction_pack, inverse_of: :transactions
 
-  # get user
+  # Get user
   def user
     User.get(self.user_guid)
   end
 
-  # set user
+  # Set user
   def user=(user)
     if user
       self.user_guid = user.guid

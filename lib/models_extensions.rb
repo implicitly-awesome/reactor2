@@ -1,12 +1,17 @@
 require 'rack/auth/digest/md5'
 
+# Extensions for the MongoId models and Dalli
 module ModelsExtensions
   class Extensions
     def initialize
       @attributes = {}
     end
 
-    # generate a Guid
+    # Generate an incremental Guid
+    # @param datetime [DateTime] datetime when the record is creating
+    # @param shard [Integer] number of the shard where the record is creating
+    # @param id [Integer] random integer number that brings some randomization to the method
+    # @return [String] the guid
     def self.get_guid(datetime=(Time.now.getutc.to_f * 1000.0).to_i, shard=1, id=rand(999))
       zero_date = (Time.new(2012,1,1).getutc.to_f * 1000.0).to_i
       delta_time = (datetime - zero_date)
@@ -14,13 +19,16 @@ module ModelsExtensions
       guid.to_s
     end
 
-    # get a list of the models, described in reactor
+    # Get a list of the models, described in reactor
+    # @return [Array] array of classes that represents models of the application
     def self.get_all_models
       Object.constants.collect { |sym| Object.const_get(sym) }.
           select { |constant| constant.class == Class && constant.include?(Mongoid::Document) }
     end
 
-    # try to get record from cache (and build from json hash then) or from database
+    # Get model object from cache or from database
+    # @param guid [String,Integer] guid of the record
+    # @return [Class] the object built from cache or got form database
     def self.get(guid)
       begin
         self.find_in_cache(guid) ? build_from_json(self.find_in_cache(guid)) : self.find_in_db(guid)
@@ -29,6 +37,9 @@ module ModelsExtensions
       end
     end
 
+    # Get record from cache
+    # @param guid [String,Integer] guid of the record
+    # @return [String] JSON representation of the record
     def self.find_in_cache(guid)
       if self.to_s == 'TransactionPack'
         Padrino.cache.get("tp_#{guid}")
@@ -37,10 +48,16 @@ module ModelsExtensions
       end
     end
 
+    # Get record from database by user guid
+    # @param user_guid [String,Integer] guid of the user
+    # @return [Class] model object of record that belongs to the user
     def self.find_by_user(user_guid)
       self.where(user_guid: user_guid).first
     end
 
+    # Get record from database by guid. If it was founded - put in cache
+    # @param guid [String,Integer] guid of the record
+    # @return [Class] model object of record
     def self.find_in_db(guid)
       if self.to_s == 'TransactionPack'
         result = self.find_by_user(guid)
@@ -51,6 +68,8 @@ module ModelsExtensions
       result
     end
 
+    # Get JSON representation of the object; JSON generates with Rabl template (seeks in the views directory)
+    # @return [String] JSON representation of the object
     def to_json_rabl
       json_template_path = "#{Padrino.root}/app/views/#{self.class.to_s.underscore}/show"
       if File.exist? "#{json_template_path}.rabl"
@@ -60,6 +79,8 @@ module ModelsExtensions
       end
     end
 
+    # Get a JSON representation of the object and put it into cache
+    # @return [Boolean] success of the operation
     def put_in_cache
       if self.is_a? TransactionPack
         Padrino.cache.set("tp_#{self.user_guid}", self.to_json_rabl)
@@ -68,6 +89,8 @@ module ModelsExtensions
       end
     end
 
+    # Delete the object from cache.
+    # @return [Boolean] success of the operation
     def delete_from_cache
       if self.is_a? TransactionPack
         Padrino.cache.delete("tp_#{self.user_guid}")
@@ -76,22 +99,20 @@ module ModelsExtensions
       end
     end
 
-    #def method_missing(name, *args)
-    #  attribute = name.to_s
-    #  if attribute =~ /=$/
-    #    @attributes[attribute.chop] = args[0]
-    #  else
-    #    @attributes[attribute]
-    #  end
-    #end
 
 
     private
 
+    # Set guid to the object
+    # @return [String] guid
     def set_guid
       self.guid = ModelsExtensions::Extensions.get_guid
     end
 
+    # Build an object from the JSON string
+    # @param json [String] a JSON representation of the object
+    # @param block [Proc] a block that will be execute during the object building
+    # @return [Class] the object
     def self.build_from_json(json, &block)
       hash = json ? JSON.parse(json) : nil
       if hash

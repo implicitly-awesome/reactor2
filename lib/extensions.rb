@@ -1,4 +1,6 @@
 class String
+  # Convert the CamelCase string to its underscored_string
+  # @return [String] the underscored analog
   def underscore
     self.gsub(/::/, '/').
         gsub(/([A-Z]+)([A-Z][a-z])/,'\1_\2').
