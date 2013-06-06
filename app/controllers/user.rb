@@ -1,6 +1,6 @@
 Reactor2::App.controllers :user do
   before {content_type :json}
-  before :restrict_access
+  #before :restrict_access
   before :show do
     @user = User.get(params[:guid])
   end
