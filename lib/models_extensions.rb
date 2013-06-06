@@ -6,6 +6,7 @@ module ModelsExtensions
       @attributes = {}
     end
 
+    # generate a Guid
     def self.get_guid(datetime=(Time.now.getutc.to_f * 1000.0).to_i, shard=1, id=rand(999))
       zero_date = (Time.new(2012,1,1).getutc.to_f * 1000.0).to_i
       delta_time = (datetime - zero_date)
@@ -13,13 +14,19 @@ module ModelsExtensions
       guid.to_s
     end
 
+    # get a list of the models, described in reactor
     def self.get_all_models
       Object.constants.collect { |sym| Object.const_get(sym) }.
           select { |constant| constant.class == Class && constant.include?(Mongoid::Document) }
     end
 
+    # try to get record from cache (and build from json hash then) or from database
     def self.get(guid)
-      self.find_in_cache(guid) ? build_from_json(self.find_in_cache(guid)) : self.find_in_db(guid)
+      begin
+        self.find_in_cache(guid) ? build_from_json(self.find_in_cache(guid)) : self.find_in_db(guid)
+      rescue
+        nil
+      end
     end
 
     def self.find_in_cache(guid)

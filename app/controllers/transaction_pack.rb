@@ -24,8 +24,12 @@ Reactor2::App.controllers :transaction_pack do
   # give only actual transactions (id > :guid_on_devise)
   get :actual, map: '/api/v1/transaction_packs/:user_guid/last/:guid_on_devise' do
     @transactions = []
-    @transaction_pack.transactions.each do |t|
-      @transactions.push(t) if t.guid.to_i > params[:guid_on_devise].to_i
+    if @transaction_pack && @transaction_pack.transactions
+      @transaction_pack.transactions.each do |t|
+        @transactions.push(t) if t.guid.to_i > params[:guid_on_devise].to_i
+      end
+    else
+      nil
     end
     render 'transaction/index'
   end
@@ -84,13 +88,13 @@ Reactor2::App.controllers :transaction_pack do
 
   # get transactions list embedded in transaction pack
   get :transactions_index, map: '/api/v1/transaction_packs/:user_guid/transactions/' do
-    @transactions = @transaction_pack.transactions
+    @transactions = @transaction_pack.transactions if @transaction_pack && @transaction_pack.transactions
     render 'transaction/index'
   end
 
   # get exact transaction from the list of embedded in transaction pack
   get :transactions_show, map: '/api/v1/transaction_packs/:user_guid/transactions/:guid' do
-    @transaction = @transaction_pack.transactions.where(guid: params[:guid]).first
+    @transaction = @transaction_pack.transactions.where(guid: params[:guid]).first if @transaction_pack && @transaction_pack.transactions
     render 'transaction/show'
   end
 

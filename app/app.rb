@@ -2,6 +2,7 @@ require 'sinatra/synchrony'
 require 'models_extensions'
 require 'self_test'
 require 'extensions'
+require 'exceptions'
 require 'active_support/inflector'
 
 module Reactor2
