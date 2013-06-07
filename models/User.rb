@@ -34,7 +34,7 @@ class User < ModelsExtensions::Extensions
 
   validates :guid, uniqueness: true, presence: true
   validates :name, presence: true
-  validates :confirmed, inclusion: [true,false]
+  validates :confirmed, inclusion: [0,1]
   validates :alias, length: {maximum: 1000}
   validates :login, length: {maximum: 100}, uniqueness: {case_sensitive: true}, presence: true
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i

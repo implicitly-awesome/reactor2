@@ -27,7 +27,7 @@ Reactor2::App.controllers :user do
       user.put_in_cache
       deliver(:user_notifier, :confirmation, user) unless PADRINO_ENV == 'test'
     end
-    response_with user, {guid: user.guid, password_digest: user.password_digest}
+    response_with user, {guid: user.guid.to_s, password_digest: user.password_digest.to_s}
   end
 
   # Update the user
