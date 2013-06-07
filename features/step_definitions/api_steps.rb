@@ -46,6 +46,7 @@ When /^I send a ([^"]*) request (?:for|to) "([^"]*)"(?: with the following:)?$/ 
       request_opts[:input] = input
     end
   end
+
   request path, request_opts
 end
 
