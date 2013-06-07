@@ -53,8 +53,8 @@ module ModelsExtensions
     # Get record from database by user guid
     # @param users_guid [String,Integer] guid of the user
     # @return [Class] model object of record that belongs to the user
-    def self.find_by_user(users_guid)
-      self.where(users_guid: users_guid).first
+    def self.find_by_user(guid)
+      self.where(users_guid:guid).first
     end
 
     # Get record from database by guid. If it was founded - put in cache
