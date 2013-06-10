@@ -65,14 +65,14 @@ module Reactor2
     #
 
     ##
-    # You can manage errors like:
+    # You can manage common like:
     #
     #   error 404 do
-    #     render 'errors/404'
+    #     render 'common/404'
     #   end
     #
     #   error 505 do
-    #     render 'errors/505'
+    #     render 'common/505'
     #   end
     #
 

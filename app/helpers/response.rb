@@ -16,7 +16,7 @@ Reactor2::App.helpers do
     if request.xhr?
       content_type 'application/json'
       @resp[:success] = false
-      @resp[:errors]  = obj.errors if message == nil
+      @resp[:common]  = obj.errors if message == nil
       @resp[:message] = message if message
       halt 400, @resp.to_json
     else

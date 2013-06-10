@@ -10,7 +10,8 @@ Reactor2::App.controllers :user do
   get :index, map: '/api/v1/users' do
     #@users = User.all
     #render 'user/index'
-    response = 'Deprecated'
+    @message = ApiMessage.new('Deprecated')
+    render 'common/message'
   end
 
   # Get exact user from the list

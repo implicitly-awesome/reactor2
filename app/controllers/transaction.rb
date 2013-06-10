@@ -2,18 +2,21 @@ Reactor2::App.controllers :transaction do
   before {content_type :json}
   before :show do
     #@transaction = Transaction.get(params[:guid])
-    response = 'Deprecated'
+    @message = ApiMessage.new('Deprecated')
+    render 'common/message'
   end
 
   get :index, map: '/api/v1/transactions' do
     #@transactions = Transaction.all
     #render 'transaction/index'
-    response = 'Deprecated'
+    @message = ApiMessage.new('Deprecated')
+    render 'common/message'
   end
 
   get :show, map: '/api/v1/transactions/:guid' do
     #render 'transaction/show'
-    response = 'Deprecated'
+    @message = ApiMessage.new('Deprecated')
+    render 'common/message'
   end
 
   post :create, map: '/api/v1/transactions' do
@@ -22,7 +25,8 @@ Reactor2::App.controllers :transaction do
     #transaction.user = User.find_in_db(params[:user_guid])
     #transaction.put_in_cache if transaction.save
     #response_with transaction
-    response = 'Deprecated'
+    @message = ApiMessage.new('Deprecated')
+    render 'common/message'
   end
 
   put :update, map: '/api/v1/transactions/:guid' do
@@ -32,7 +36,8 @@ Reactor2::App.controllers :transaction do
     #  transaction.put_in_cache
     #end
     #response_with transaction
-    response = 'Deprecated'
+    @message = ApiMessage.new('Deprecated')
+    render 'common/message'
   end
 
   delete :destroy, map: '/api/v1/transactions/' do
@@ -42,6 +47,7 @@ Reactor2::App.controllers :transaction do
     #  transaction.delete_from_cache
     #  transaction.destroy
     #end
-    response = 'Deprecated'
+    @message = ApiMessage.new('Deprecated')
+    render 'common/message'
   end
 end

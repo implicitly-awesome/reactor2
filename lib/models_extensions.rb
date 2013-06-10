@@ -42,6 +42,8 @@ module ModelsExtensions
     def self.find_in_cache(guid)
       if self.to_s == 'TransactionPack'
         Padrino.cache.get("tp_#{guid}")
+      elsif self.to_s == 'ApiKey'
+        Padrino.cache.get("token_#{guid}")
       else
         Padrino.cache.get(guid)
       end
@@ -55,10 +57,10 @@ module ModelsExtensions
     end
 
     # Get record from database by guid. If it was founded - put in cache
-    # @param guid [String,Integer] guid of the record
+    # @param guid [String] guid of the record
     # @return [Class] model object of record
     def self.find_in_db(guid)
-      if self.to_s == 'TransactionPack'
+      if self.to_s == 'TransactionPack' || self.to_s == 'ApiKey'
         result = self.find_by_user(guid)
       else
         result = self.where(guid: guid).first
@@ -83,6 +85,8 @@ module ModelsExtensions
     def put_in_cache
       if self.is_a? TransactionPack
         Padrino.cache.set("tp_#{self.users_guid}", self.to_json_rabl)
+      elsif self.is_a? ApiKey
+        Padrino.cache.set("token_#{self.users_guid}", self.token)
       else
         Padrino.cache.set(self.guid, self.to_json_rabl)
       end
@@ -93,6 +97,8 @@ module ModelsExtensions
     def delete_from_cache
       if self.is_a? TransactionPack
         Padrino.cache.delete("tp_#{self.users_guid}")
+      elsif self.is_a? ApiKey
+        Padrino.cache.delete("token_#{self.users_guid}")
       else
         Padrino.cache.delete(self.guid)
       end

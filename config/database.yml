@@ -20,3 +20,19 @@ test:
      database: reactor2_test
      hosts:
        - localhost:27017
+
+development_nsi:
+ sessions:
+   default:
+     database: reactor2_development_nsi
+     hosts:
+       - localhost:27017
+
+production_nsi:
+ sessions:
+   default:
+     database: nsi
+     hosts:
+       - localhost:27017
+     username: improva
+     password: WXJP0q97MWliHn0dhQH9

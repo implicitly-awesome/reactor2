@@ -1,28 +1,37 @@
 Reactor2::App.controllers :transaction_pack do
   before {content_type :json}
-  before :restrict_access
-  before :show, :actual, :last, :transactions_index, :transactions_show do
-    @transaction_pack = TransactionPack.get(params[:users_guid])
+
+  before do
+    unless has_access? params[:users_guid], params[:token]
+      @message = ApiMessage.new('Access denied', :error)
+    end
   end
 
   # Get the list of transaction packs
   get :index, map: '/api/v1/transaction_packs' do
-    @transaction_packs = TransactionPack.all
-    render 'transaction_pack/index'
+    #if @message
+    #  render 'common/message'
+    #else
+      @transaction_packs = TransactionPack.all
+      render 'transaction_pack/index'
+    #end
   end
 
   # Get exact transaction pack
   get :show, map: '/api/v1/transaction_packs/:users_guid' do
+    @transaction_pack = TransactionPack.get(params[:users_guid])
     render 'transaction_pack/show'
   end
 
   # Give last user transaction
   get :last, map: '/api/v1/transaction_packs/:users_guid/last/' do
+    @transaction_pack = TransactionPack.get(params[:users_guid])
     response = get_last_transaction(@transaction_pack)
   end
 
   # Give only actual transactions (id > :guid_on_devise)
   get :actual, map: '/api/v1/transaction_packs/:users_guid/last/:guid_on_devise' do
+    @transaction_pack = TransactionPack.get(params[:users_guid])
     @transactions = []
     if @transaction_pack && @transaction_pack.transactions
       @transaction_pack.transactions.each do |t|
@@ -41,7 +50,8 @@ Reactor2::App.controllers :transaction_pack do
     #transaction_pack.user = User.find_in_db(params[:users_guid])
     #transaction_pack.put_in_cache if transaction_pack.save
     #response_with transaction_pack
-    response = 'Deprecated'
+    @message ||= 'Deprecated'
+    render 'common/message'
   end
 
   # Update a transaction pack if it exists, if not - create it
@@ -88,20 +98,15 @@ Reactor2::App.controllers :transaction_pack do
 
   # Get transactions list embedded in transaction pack
   get :transactions_index, map: '/api/v1/transaction_packs/:users_guid/transactions/' do
+    @transaction_pack = TransactionPack.get(params[:users_guid])
     @transactions = @transaction_pack.transactions if @transaction_pack && @transaction_pack.transactions
     render 'transaction/index'
   end
 
   # Get exact transaction from the list of embedded in transaction pack
   get :transactions_show, map: '/api/v1/transaction_packs/:users_guid/transactions/:guid' do
+    @transaction_pack = TransactionPack.get(params[:users_guid])
     @transaction = @transaction_pack.transactions.where(guid: params[:guid]).first if @transaction_pack && @transaction_pack.transactions
     render 'transaction/show'
   end
-
-  private
-
-    def restrict_access
-       api_key = ApiKey.get(params[:access_token])
-       head :unauthorized unless api_key
-    end
 end
