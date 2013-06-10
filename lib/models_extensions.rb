@@ -29,7 +29,6 @@ module ModelsExtensions
     # @param guid [String,Integer] guid of the record
     # @return [Class] the object built from cache or got form database
     def self.get(guid)
-      guid = guid.to_s
        if self.find_in_cache(guid)
          build_from_json(self.find_in_cache(guid))
        else
@@ -41,7 +40,6 @@ module ModelsExtensions
     # @param guid [String,Integer] guid of the record
     # @return [String] JSON representation of the record
     def self.find_in_cache(guid)
-      guid = guid.to_s
       if self.to_s == 'TransactionPack'
         Padrino.cache.get("tp_#{guid}")
       else
@@ -53,14 +51,13 @@ module ModelsExtensions
     # @param users_guid [String,Integer] guid of the user
     # @return [Class] model object of record that belongs to the user
     def self.find_by_user(guid)
-      self.where(users_guid:guid.to_s).first
+      self.where(users_guid:guid).first
     end
 
     # Get record from database by guid. If it was founded - put in cache
     # @param guid [String,Integer] guid of the record
     # @return [Class] model object of record
     def self.find_in_db(guid)
-      guid = guid.to_s
       if self.to_s == 'TransactionPack'
         result = self.find_by_user(guid)
       else
@@ -85,7 +82,7 @@ module ModelsExtensions
     # @return [Boolean] success of the operation
     def put_in_cache
       if self.is_a? TransactionPack
-        Padrino.cache.set("tp_#{self.users_guid.to_s}", self.to_json_rabl)
+        Padrino.cache.set("tp_#{self.users_guid}", self.to_json_rabl)
       else
         Padrino.cache.set(self.guid, self.to_json_rabl)
       end
@@ -95,9 +92,9 @@ module ModelsExtensions
     # @return [Boolean] success of the operation
     def delete_from_cache
       if self.is_a? TransactionPack
-        Padrino.cache.delete("tp_#{self.users_guid.to_s}")
+        Padrino.cache.delete("tp_#{self.users_guid}")
       else
-        Padrino.cache.delete(self.guid.to_s)
+        Padrino.cache.delete(self.guid)
       end
     end
 

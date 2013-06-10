@@ -2,7 +2,7 @@ class TransactionPack < ModelsExtensions::Extensions
   include Mongoid::Document
   include Mongoid::Timestamps
 
-  field :users_guid, as: :guid, type: Integer
+  field :users_guid, as: :guid, type: String
   # package of transactions that should be included to transaction_pack
   field :sync_pack, type: Array
 

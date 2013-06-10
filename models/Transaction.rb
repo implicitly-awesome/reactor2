@@ -3,8 +3,8 @@ class Transaction < ModelsExtensions::Extensions
   include Mongoid::Document
   include Mongoid::Timestamps
 
-  field :guid, type: Integer
-  field :users_guid, type: Integer
+  field :guid, type: String
+  field :users_guid, type: String
   field :action, type: String                   # [c]reate || [u]pdate || [d]elete
   field :coll_name, type: String                # collection that transaction for
   field :coll_row_guid, type: Integer            # row ID in the collection that transaction for

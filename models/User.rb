@@ -14,7 +14,7 @@ class User < ModelsExtensions::Extensions
   before_destroy {false}
 
 
-  field :users_guid, as: :guid, type: Integer
+  field :users_guid, as: :guid, type: String
   field :users_alias, as: :alias, type: String
   field :users_login, as: :login, type: String
   field :name, as: :name, type: String
