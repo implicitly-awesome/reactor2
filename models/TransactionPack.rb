@@ -63,7 +63,7 @@ class TransactionPack < ModelsExtensions::Extensions
           if v.is_a? Array
             v.each do |i|
               tp.send("#{k}").send(:create!, i)
-            end
+            end                                                                     c
           end
         end
         tp

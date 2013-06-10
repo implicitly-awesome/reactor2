@@ -15,8 +15,7 @@ module ModelsExtensions
     def self.get_guid(datetime=(Time.now.getutc.to_f * 1000.0).to_i, shard=1, id=rand(999))
       zero_date = (Time.new(2012,1,1).getutc.to_f * 1000.0).to_i
       delta_time = (datetime - zero_date)
-      guid = (delta_time*(2**23))+((shard%(2**13))*(2**10))+(id%(2**10))
-      guid
+      (delta_time*(2**23))+((shard%(2**13))*(2**10))+(id%(2**10))
     end
 
     # Get a list of the models, described in reactor
@@ -54,7 +53,7 @@ module ModelsExtensions
     # @param users_guid [String,Integer] guid of the user
     # @return [Class] model object of record that belongs to the user
     def self.find_by_user(guid)
-      self.where(users_guid:guid).first
+      self.where(users_guid:guid.to_s).first
     end
 
     # Get record from database by guid. If it was founded - put in cache
@@ -86,7 +85,7 @@ module ModelsExtensions
     # @return [Boolean] success of the operation
     def put_in_cache
       if self.is_a? TransactionPack
-        Padrino.cache.set("tp_#{self.users_guid}", self.to_json_rabl)
+        Padrino.cache.set("tp_#{self.users_guid.to_s}", self.to_json_rabl)
       else
         Padrino.cache.set(self.guid, self.to_json_rabl)
       end
@@ -96,9 +95,9 @@ module ModelsExtensions
     # @return [Boolean] success of the operation
     def delete_from_cache
       if self.is_a? TransactionPack
-        Padrino.cache.delete("tp_#{self.users_guid}")
+        Padrino.cache.delete("tp_#{self.users_guid.to_s}")
       else
-        Padrino.cache.delete(self.guid)
+        Padrino.cache.delete(self.guid.to_s)
       end
     end
 
