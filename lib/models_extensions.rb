@@ -29,11 +29,15 @@ module ModelsExtensions
     # @param guid [String,Integer] guid of the record
     # @return [Class] the object built from cache or got form database
     def self.get(guid)
-       if self.find_in_cache(guid)
+      if self.find_in_cache(guid)
+       if self.respond_to? :users_guid
          build_from_json(self.find_in_cache(guid))
        else
-         self.find_in_db(guid)
+         build_from_json_NSI(self.find_in_cache(guid))
        end
+      else
+       self.find_in_db(guid)
+      end
     end
 
     # Get record from cache
@@ -71,8 +75,8 @@ module ModelsExtensions
 
     # Get JSON representation of the object; JSON generates with Rabl template (seeks in the views directory)
     # @return [String] JSON representation of the object
-    def to_json_rabl
-      json_template_path = "#{Padrino.root}/app/views/#{self.class.to_s.underscore}/show"
+    def to_json_rabl(rabl_path="#{self.class.to_s.underscore}/show")
+      json_template_path = "#{Padrino.root}/app/views/"+rabl_path
       if File.exist? "#{json_template_path}.rabl"
         Rabl.render(self, json_template_path)
       else
@@ -156,6 +160,41 @@ module ModelsExtensions
             nil
           end
         end
+      end
+    end
+
+    # Build an NSI object from the JSON string
+    # @param json [String] a JSON representation of the object
+    # @param block [Proc] a block that will be execute during the object building
+    # @return [Class] the object
+    def self.build_from_json_NSI(json, &block)
+      hash = json ? JSON.parse(json) : nil
+      if hash
+        entity = self.new
+        entity.guid = self.get_guid
+
+        block.call if block_given?
+
+        hash.each do |k, v|
+          if v.is_a? Array
+            v.each do |i|
+              entity.send("#{k}").send(:build, i)
+            end
+          else
+            entity.send("#{k}=",v)
+          end
+        end
+        entity
+      end
+    end
+
+    def self.field_alias(old_name, new_name)
+      define_method(new_name.to_sym) do
+        self.send("#{old_name}".to_sym)
+      end
+
+      define_method("#{new_name.to_s}=".to_sym) do |value|
+        self.send("#{old_name.to_s}=".to_sym, value)
       end
     end
   end

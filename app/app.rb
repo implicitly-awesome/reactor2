@@ -15,6 +15,8 @@ module Reactor2
 
     enable :sessions
 
+    Mongoid.load!('config/mongoid.yml')
+
     ##
     # Caching support
     #

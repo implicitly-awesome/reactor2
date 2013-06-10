@@ -19,9 +19,9 @@ end
 
 # If you want to use a YML file for config, use this instead:
 #
-Mongoid.load!(File.join(Padrino.root, 'config', 'database.yml'), Padrino.env)
+Mongoid.load!(File.join(Padrino.root, 'config', 'mongoid.yml'), Padrino.env)
 #
-# And add a config/database.yml file like this:
+# And add a config/mongoid.yml file like this:
 #   development:
 #     sessions:
 #       default:
