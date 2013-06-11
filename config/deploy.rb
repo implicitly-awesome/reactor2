@@ -35,12 +35,14 @@ after 'deploy', 'deploy:cleanup', 'deploy:stop', 'deploy:start'
 namespace :deploy do
   task :start  do
     run "cd #{current_path} && RACK_ENV=production bundle exec thin -C config/thin.yml start"# -R config.ru start
-    sudo "/etc/init.d/nginx start"
+    #sudo "/etc/init.d/nginx start"
+    sudo "service nginx start"
   end
 
   task :stop do
     run "cd #{current_path} && RACK_ENV=production bundle exec thin -C config/thin.yml stop"# -R config.ru stop
-    sudo "/etc/init.d/nginx stop"
+    #sudo "/etc/init.d/nginx stop"
+    sudo "service nginx stop"
   end
 
   #task :restart do
@@ -51,7 +53,8 @@ namespace :deploy do
   #end
 
   task :setup_config, roles: :app do
-    sudo "chmod ugo+rwx /opt/nginx/conf/nginx.conf"
+    #sudo "chmod ugo+rwx /opt/nginx/conf/nginx.conf"
+    sudo "chmod ugo+rwx /etc/nginx/nginx.conf"
     #put File.read("config/nginx.conf"), "/opt/nginx/conf/nginx.conf"
     put File.read("config/nginx.conf"), "/etc/nginx/nginx.conf"
     run "mkdir -p #{shared_path}/config"
