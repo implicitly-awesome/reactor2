@@ -8,6 +8,7 @@ class User < ModelsExtensions::Extensions
   before_create :set_confirm_hash
   before_save do
     self.email = email.downcase
+    self.password = nil
   end
   # User destroying is canceled
   before_destroy {false}
@@ -16,6 +17,7 @@ class User < ModelsExtensions::Extensions
   field :guid, type: String
   field :alias, type: String
   field :login, type: String
+  field :password, type: String
   field :password_digest, type: String
   field :email, type: String
   field :birthday, type: Date
@@ -42,7 +44,7 @@ class User < ModelsExtensions::Extensions
   # set confirmation hash
   def set_confirm_hash
     ticks = (Time.now.to_f*1000)-(Time.new(1970,1,1).to_f*1000)
-    self.hashs = Digest::SHA2.hexdigest("#{self.guid}#{self.email}#{ticks}weknowwhatwedo")
+    self.confirm_hash = Digest::SHA2.hexdigest("#{self.guid}#{self.email}#{ticks}weknowwhatwedo")
     self.confirmed = false
     true
   end
