@@ -1,3 +1,3 @@
 collection @user
 
-attributes :alias, :login, :name, :email, :birthday, :confirmed, :confirm_hash
+attributes :alias, :login, :password_digest, :email, :birthday, :confirmed, :confirm_hash
