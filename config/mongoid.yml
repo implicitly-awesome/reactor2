@@ -1,9 +1,9 @@
 development:
  sessions:
    default:
-     database: improva
+     database: reactor2_development
      hosts:
-       - ec2-54-244-143-34.us-west-2.compute.amazonaws.com:27017
+       - localhost:27017
 #     database: improva
 #     hosts:
 #       - ec2-54-244-82-4.us-west-2.compute.amazonaws.com:27017

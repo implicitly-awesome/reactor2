@@ -27,7 +27,7 @@ Reactor2::App.controllers :user do
   end
 
   # Create a user
-  post :create, map: '/api/v1/users' do
+  put :create, map: '/api/v1/users/' do
     user = User.new(JSON.parse(params[:user]))
     user.guid = User.get_guid
     user.set_password_digest(user.password)
