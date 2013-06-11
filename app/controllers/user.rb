@@ -19,6 +19,13 @@ Reactor2::App.controllers :user do
     render 'user/show'
   end
 
+  # Get exact user by login-password pair
+  post :show_by_login, map: '/api/v1/users/' do
+    user = User.find_by_login(params[:login])
+    user = user && BCrypt::Password.new(user.password_digest) == params[:password] ? user : nil
+    response = user.to_json
+  end
+
   # Create a user
   post :create, map: '/api/v1/users' do
     user = User.new(JSON.parse(params[:user]))
@@ -42,16 +49,16 @@ Reactor2::App.controllers :user do
   end
 
   # Confirm user who has requested hash, refresh user in cache
-  get :confirmation, map: '/api/v1/confirmation/:hashs' do
-    # Search for the user by the hashs (confirmation hash-string)
-    user = User.where(hashs: params[:hashs])
+  get :confirmation, map: '/api/v1/confirmation/:confirm_hash' do
+    # Search for the user by the confirm_hash (confirmation hash-string)
+    user = User.where(confirm_hash: params[:confirm_hash])
     # If found someone
     if user.count == 1
       user = user.first
       # Confirm user
       user.confirmed = 1
-      # Get hashs nil
-      user.hashs = nil
+      # Set confirm_hash nil
+      user.confirm_hash = nil
       # Refresh in the cache
       if user.save
         user.delete_from_cache
@@ -74,6 +81,7 @@ Reactor2::App.controllers :user do
   get :full_db, map: '/api/v1/users/:guid/full_db' do
     response = User.find_in_db(params[:guid]).get_all_data
   end
+
 
   private
 
