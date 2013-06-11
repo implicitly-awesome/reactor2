@@ -24,8 +24,8 @@ class User < ModelsExtensions::Extensions
   field :confirmed, type: Integer, default: 0
   field :confirm_hash, type: String
 
-  attr_accessible :guid, :alias, :login, :name, :password, :email, :birthday, :confirmed, :confirm_hash
-  attr_readonly :password_digest
+  attr_accessible :guid, :alias, :login, :name, :password, :email, :birthday, :confirmed, :confirm_hash,:password_digest
+  #attr_readonly :password_digest
 
 
   validates :guid, uniqueness: true, presence: true
