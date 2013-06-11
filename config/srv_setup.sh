@@ -18,9 +18,9 @@ rvm install 2.0.0-p195
 rvm 2.0.0-p195
 
 gem install bundler
-#gem install passenger -v 3.0.19
-#rvmsudo passenger-install-nginx-module --auto --auto-download --prefix=/opt/nginx
-sudo apt-get install nginx
+gem install passenger
+rvmsudo passenger-install-nginx-module --auto --auto-download --prefix=/opt/nginx
+#sudo ln -s /opt/nginx/conf /etc/nginx
 
 sudo wget -O init-deb.sh http://library.linode.com/assets/660-init-deb.sh
 sudo mv init-deb.sh /etc/init.d/nginx
@@ -30,8 +30,8 @@ sudo /usr/sbin/update-rc.d -f nginx defaults
 #printf "reactor2:$(openssl passwd -1 BamBIGaY)\n" >> /home/ubuntu/apps/reactor2/htpasswd
 #chown root:nobody /home/ubuntu/apps/reactor2/htpasswd
 #chmod 640 /home/ubuntu/apps/reactor2/htpasswd
-#sudo /etc/init.d/nginx stop
-#sudo /etc/init.d/nginx start
+sudo /etc/init.d/nginx stop
+sudo /etc/init.d/nginx start
 
 sudo apt-add-repository ppa:chris-lea/node.js
 #sudo apt-get -y update
