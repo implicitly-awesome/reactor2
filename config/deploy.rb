@@ -52,7 +52,8 @@ namespace :deploy do
 
   task :setup_config, roles: :app do
     sudo "chmod ugo+rwx /opt/nginx/conf/nginx.conf"
-    put File.read("config/nginx.conf"), "/opt/nginx/conf/nginx.conf"
+    #put File.read("config/nginx.conf"), "/opt/nginx/conf/nginx.conf"
+    put File.read("config/nginx.conf"), "/etc/nginx/nginx.conf"
     run "mkdir -p #{shared_path}/config"
     put File.read("config/database.rb"), "#{shared_path}/config/database.rb"
   end
