@@ -3,7 +3,7 @@ development:
    default:
      database: reactor2_development
      hosts:
-       - localhost:27017
+       - ec2-54-214-67-131.us-west-2.compute.amazonaws.com
 #     database: improva
 #     hosts:
 #       - ec2-54-244-82-4.us-west-2.compute.amazonaws.com:27017
@@ -12,9 +12,7 @@ development:
    nsi:
      database: nsi
      hosts:
-       - ec2-54-244-82-4.us-west-2.compute.amazonaws.com:27017
-     username: improva
-     password: WXJP0q97MWliHn0dhQH9
+       - ec2-54-214-67-131.us-west-2.compute.amazonaws.com:27017
 
 production:
  sessions:
@@ -22,14 +20,10 @@ production:
      database: improva
      hosts:
        - localhost:27017
-     username: improva
-     password: WXJP0q97MWliHn0dhQH9
    nsi:
      database: nsi
      hosts:
        - localhost:27017
-     username: improva
-     password: WXJP0q97MWliHn0dhQH9
 
 test:
  sessions:

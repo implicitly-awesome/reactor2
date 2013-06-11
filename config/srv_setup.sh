@@ -14,8 +14,8 @@ echo 'gem: --no-ri --no-rdoc'  >> ~/.gemrc
 curl -L https://get.rvm.io | bash -s stable --ruby
 source /home/ubuntu/.rvm/scripts/rvm
 type rvm | head -1
-rvm install 1.9.3-p392
-rvm 1.9.3-p392
+rvm install 2.0.0-p195
+rvm 2.0.0-p195
 
 gem install bundler
 gem install passenger -v 3.0.19
