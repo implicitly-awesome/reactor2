@@ -13,6 +13,7 @@ gem 'activesupport', '~> 3.2.13'
 gem 'sass'
 gem 'slim'
 
+gem 'mongo'
 gem 'mongoid', '~> 3.0.23'
 gem 'dalli', '~> 2.6.3'
 

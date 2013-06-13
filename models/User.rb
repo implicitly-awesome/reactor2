@@ -1,5 +1,6 @@
 require 'digest/sha2'
 require 'bcrypt'
+require 'mongo'
 
 class User < ModelsExtensions::Extensions
   include Mongoid::Document
@@ -51,26 +52,42 @@ class User < ModelsExtensions::Extensions
 
   # get all data by user from DB
   def get_all_data
+    db = Mongo::MongoClient.new('ec2-54-244-143-34.us-west-2.compute.amazonaws.com', '27017').db('improva')
     data = {user: self}
-    models = ModelsExtensions::Extensions.get_all_models
-    models.delete(Transaction) # transactions already included in transaction pack
+    models = Mongoid.default_session.collections.map(&:name)
+    #models = ModelsExtensions::Extensions.get_all_models
+
+    models.delete('transactions') # transactions already included in transaction pack
+    models.delete('transaction_packs')
+    models.delete('users')
+    models.delete('tutorcriteria')
+    models.delete('tutors')
+    models.delete('tutorgoals')
+
+    # return whole data for collections in white list
+    white_list = ['tutorcriteria', 'tutors', 'tutorgoals']
+
     models.each do |model|
-      # if collection contains user_guid field - get all data for our user
-      if model.instance_methods.include?(:user_guid)
-        data[model.to_s.underscore.to_sym] = []
-        model.where(user_guid: self.guid).each do |obj|
-          data[model.to_s.underscore.to_sym] << obj
-        end
-        # if collection DOESN'tT contains user_guid field - get all data
-      else
-        if model.to_s != 'User' && model.to_s != 'Transaction' && model.to_s != 'TransactionPack'
-          data[model.to_s.underscore.to_sym] = []
-          model.all.each do |obj|
-            data[model.to_s.underscore.to_sym] << obj
-          end
-        end
+      #data[model.to_s.underscore.to_sym] = []
+      data[model] = []
+      #model.where(user_guid: self.guid).each do |obj|
+      #  data[model.to_s.underscore.to_sym] << obj
+      #end
+
+      db[model].find({"user_guid" => self.guid}).to_a.each do |obj|
+        data[model] << obj
       end
     end
+
+    white_list.each do |model|
+      data[model] = []
+
+      db[model].find({}).to_a.each do |obj|
+        data[model] << obj
+      end
+    end
+
+
     data.to_json
   end
 

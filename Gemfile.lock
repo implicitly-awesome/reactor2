@@ -9,6 +9,7 @@ GEM
       multi_json (~> 1.0)
     addressable (2.3.4)
     bcrypt-ruby (3.0.1)
+    bson (1.8.6)
     builder (3.0.4)
     capistrano (2.15.4)
       highline
@@ -82,6 +83,8 @@ GEM
       treetop (~> 1.4.8)
     method_source (0.8.1)
     mime-types (1.23)
+    mongo (1.8.6)
+      bson (~> 1.8.6)
     mongoid (3.0.23)
       activemodel (~> 3.1)
       moped (~> 1.2)
@@ -212,6 +215,7 @@ DEPENDENCIES
   guard
   guard-cucumber
   jsonpath
+  mongo
   mongoid (~> 3.0.23)
   nokogiri
   oj (~> 2.0.12)
