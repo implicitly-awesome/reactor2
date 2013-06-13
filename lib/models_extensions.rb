@@ -30,7 +30,7 @@ module ModelsExtensions
     # @return [Class] the object built from cache or got form database
     def self.get(guid)
       if self.find_in_cache(guid)
-       if self.respond_to? :users_guid
+       if self.respond_to? :user_guid
          build_from_json(self.find_in_cache(guid))
        else
          build_from_json_NSI(self.find_in_cache(guid))
@@ -54,10 +54,10 @@ module ModelsExtensions
     end
 
     # Get record from database by user guid
-    # @param users_guid [String,Integer] guid of the user
+    # @param user_guid [String,Integer] guid of the user
     # @return [Class] model object of record that belongs to the user
     def self.find_by_user(guid)
-      self.where(users_guid:guid).first
+      self.where(user_guid:guid).first
     end
 
     # Get record from database by guid. If it was founded - put in cache
@@ -88,9 +88,9 @@ module ModelsExtensions
     # @return [Boolean] success of the operation
     def put_in_cache
       if self.is_a? TransactionPack
-        Padrino.cache.set("tp_#{self.users_guid}", self.to_json_rabl)
+        Padrino.cache.set("tp_#{self.user_guid}", self.to_json_rabl)
       elsif self.is_a? ApiKey
-        Padrino.cache.set("token_#{self.users_guid}", self.token)
+        Padrino.cache.set("token_#{self.user_guid}", self.token)
       else
         Padrino.cache.set(self.guid, self.to_json_rabl)
       end
@@ -100,9 +100,9 @@ module ModelsExtensions
     # @return [Boolean] success of the operation
     def delete_from_cache
       if self.is_a? TransactionPack
-        Padrino.cache.delete("tp_#{self.users_guid}")
+        Padrino.cache.delete("tp_#{self.user_guid}")
       elsif self.is_a? ApiKey
-        Padrino.cache.delete("token_#{self.users_guid}")
+        Padrino.cache.delete("token_#{self.user_guid}")
       else
         Padrino.cache.delete(self.guid)
       end
@@ -145,7 +145,7 @@ module ModelsExtensions
           end
           entity
         else
-          if User.get(entity.send(:users_guid))
+          if User.get(entity.send(:user_guid))
             block.call if block_given?
 
             hash.each do |k, v|
