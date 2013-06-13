@@ -63,9 +63,11 @@ class User < ModelsExtensions::Extensions
         end
         # if collection DOESN'tT contains user_guid field - get all data
       else
-        data[model.to_s.underscore.to_sym] = []
-        model.all.each do |obj|
-          data[model.to_s.underscore.to_sym] << obj
+        if model.to_s != 'User' || model.to_s != 'Transaction' || model.to_s != 'TransactionPack'
+          data[model.to_s.underscore.to_sym] = []
+          model.all.each do |obj|
+            data[model.to_s.underscore.to_sym] << obj
+          end
         end
       end
     end
