@@ -55,9 +55,16 @@ class User < ModelsExtensions::Extensions
     models = ModelsExtensions::Extensions.get_all_models
     models.delete(Transaction) # transactions already included in transaction pack
     models.each do |model|
+      # if collection contains user_guid field - get all data for our user
       if model.instance_methods.include?(:user_guid)
         data[model.to_s.underscore.to_sym] = []
         model.where(user_guid: self.guid).each do |obj|
+          data[model.to_s.underscore.to_sym] << obj
+        end
+        # if collection DOESN'tT contains user_guid field - get all data
+      else
+        data[model.to_s.underscore.to_sym] = []
+        model.each do |obj|
           data[model.to_s.underscore.to_sym] << obj
         end
       end
