@@ -3,7 +3,8 @@ require 'bcrypt'
 Reactor2::App.helpers do
   # Authorize user
   def authorize(user, password)
-    BCrypt::Password.new(user.password_digest) == password
+    #BCrypt::Password.new(user.password_digest) == password
+    user.password_digest == Digest::SHA2.hexdigest(password)
   end
 
   # Check users access by ApiKey

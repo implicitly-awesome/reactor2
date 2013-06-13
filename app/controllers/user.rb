@@ -22,7 +22,8 @@ Reactor2::App.controllers :user do
   # Get exact user by login-password pair
   post :show_by_login, map: '/api/v1/users/' do
     user = User.find_by_login(params[:login])
-    user = user && BCrypt::Password.new(user.password_digest) == params[:password] ? user : nil
+    #user = user && BCrypt::Password.new(user.password_digest) == params[:password] ? user : nil
+    user = user && user.password_digest == Digest::SHA2.hexdigest(params[:password]) ? user : nil
     response = user.to_json
   end
 

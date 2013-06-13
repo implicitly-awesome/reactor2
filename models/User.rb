@@ -67,6 +67,7 @@ class User < ModelsExtensions::Extensions
 
 
   def set_password_digest(password)
-    self.password_digest = BCrypt::Password.create(password)
+    #self.password_digest = BCrypt::Password.create(password)
+    self.password_digest = Digest::SHA2.hexdigest(password)
   end
 end
